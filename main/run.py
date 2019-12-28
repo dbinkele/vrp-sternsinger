@@ -26,7 +26,7 @@ def create_data_model(file_name=None):
     data = {'distance_matrix': dist_matrix(file_name) if file_name else dummy_dist_matrix(),
             'num_vehicles': NUM_VEHICLES,
             'depot': DEPOT,
-            'same_route': [[61, 68]]}
+            'same_route': [[61, 68], [12, 32]]}
 
     return data
 
@@ -98,28 +98,14 @@ def solve(dist_matrix_file_name=None):
     capacity_dimension.SetGlobalSpanCostCoefficient(100)
 
     ###same_route
-    for idx, route_constraint in enumerate(data['same_route']):
-        vehicle_capacities = [0] * NUM_VEHICLES
-        vehicle_capacities[idx] = len(route_constraint)
-        route_dimension_name = 'Same_Route_' + str(idx)
+    for vehicle_idx, route_constraint in enumerate(data['same_route']):
+        n2x = manager.NodeToIndex
+        cpsolver = routing.solver()
 
-        def callback(from_index):
-            from_node = manager.IndexToNode(from_index)
-            return 1 if from_node in route_constraint else 0
-
-        same_routes_callback_index = routing.RegisterUnaryTransitCallback(callback)
-
-        routing.AddDimensionWithVehicleCapacity(
-            same_routes_callback_index,
-            0,  # null capacity slack
-            vehicle_capacities,  # vehicle maximum capacities
-            True,  # start cumul to zero
-            route_dimension_name)
-
-        # Allow to drop nodes.
-        penalty = ub_tour + 1
-        #for node in range(1, len(data['distance_matrix'])):
-         #   routing.AddDisjunction([manager.NodeToIndex(node)], penalty)
+        for stop in route_constraint:
+            vehicle_var = routing.VehicleVar(n2x(stop))
+            values = [-1, vehicle_idx]
+            cpsolver.Add(cpsolver.MemberCt(vehicle_var, values))
 
     search_parameters = set_search_parameters()
 
@@ -149,13 +135,14 @@ def set_search_parameters():
     # search_parameters.use_full_propagation = True
     # search_parameters.use_cp_sat = 3
     # search_parameters.use_cp = 3
-    search_parameters.local_search_operators.use_tsp_opt = 3
-    search_parameters.local_search_operators.use_make_chain_inactive = 3
-    search_parameters.local_search_operators.use_extended_swap_active = 3
-    search_parameters.local_search_operators.use_path_lns = 3
+    #search_parameters.local_search_operators.use_tsp_opt = 3
+    #search_parameters.local_search_operators.use_make_chain_inactive = 3
+    #search_parameters.local_search_operators.use_extended_swap_active = 3
+    #search_parameters.local_search_operators.use_path_lns = 3
+
     # use_or_opt: BOOL_TRUE
     # use_lin_kernighan: BOOL_TRUE
-        # use_make_active: BOOL_TRUE
+    # use_make_active: BOOL_TRUE
     # use_make_inactive: BOOL_TRUE
     # use_swap_active: BOOL_TRUE
 
