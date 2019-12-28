@@ -26,7 +26,7 @@ def create_data_model(file_name=None):
     data = {'distance_matrix': dist_matrix(file_name) if file_name else dummy_dist_matrix(),
             'num_vehicles': NUM_VEHICLES,
             'depot': DEPOT,
-            'same_route': [[61, 68], [12, 32]]}
+            'same_route': [[61, 68], [12, 32, 30]]}
 
     return data
 
@@ -135,10 +135,10 @@ def set_search_parameters():
     # search_parameters.use_full_propagation = True
     # search_parameters.use_cp_sat = 3
     # search_parameters.use_cp = 3
-    #search_parameters.local_search_operators.use_tsp_opt = 3
-    #search_parameters.local_search_operators.use_make_chain_inactive = 3
-    #search_parameters.local_search_operators.use_extended_swap_active = 3
-    #search_parameters.local_search_operators.use_path_lns = 3
+    search_parameters.local_search_operators.use_tsp_opt = 3
+    search_parameters.local_search_operators.use_make_chain_inactive = 3
+    search_parameters.local_search_operators.use_extended_swap_active = 3
+    search_parameters.local_search_operators.use_path_lns = 3
 
     # use_or_opt: BOOL_TRUE
     # use_lin_kernighan: BOOL_TRUE
