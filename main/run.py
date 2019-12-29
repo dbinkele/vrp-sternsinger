@@ -26,7 +26,8 @@ def create_data_model(file_name=None):
     data = {'distance_matrix': dist_matrix(file_name) if file_name else dummy_dist_matrix(),
             'num_vehicles': NUM_VEHICLES,
             'depot': DEPOT,
-            'same_route': [[61, 68], [12, 32, 30]]}
+            'same_route': [[61, 68], [12, 32, 30]],
+            'different_route': [[39, 65], [72, 71]]}
 
     return data
 
@@ -86,9 +87,9 @@ def solve(dist_matrix_file_name=None):
         from_node = manager.IndexToNode(from_index)
         return DWEL_DURATION if from_node != 0 else 0
 
-    same_routes_callback_index = routing.RegisterUnaryTransitCallback(demand_callback)
+    dwel_duration_callback_index = routing.RegisterUnaryTransitCallback(demand_callback)
     routing.AddDimension(
-        same_routes_callback_index,
+        dwel_duration_callback_index,
         0,  # null capacity slack
         (no_visits + 1) * DWEL_DURATION,  # vehicle maximum capacities
         True,  # start cumul to zero
@@ -97,15 +98,13 @@ def solve(dist_matrix_file_name=None):
     capacity_dimension = routing.GetDimensionOrDie('DWEL_DURATION')
     capacity_dimension.SetGlobalSpanCostCoefficient(100)
 
-    ###same_route
-    for vehicle_idx, route_constraint in enumerate(data['same_route']):
-        n2x = manager.NodeToIndex
-        cpsolver = routing.solver()
+    # Allow to drop nodes.
+    #penalty = ub_tour
+    #for node in range(1, len(data['distance_matrix'])):
+     #   routing.AddDisjunction([manager.NodeToIndex(node)], penalty)
 
-        for stop in route_constraint:
-            vehicle_var = routing.VehicleVar(n2x(stop))
-            values = [-1, vehicle_idx]
-            cpsolver.Add(cpsolver.MemberCt(vehicle_var, values))
+    add_same_route_constraints(data, manager, routing)
+    add_different_route_constraints(data, manager, routing)
 
     search_parameters = set_search_parameters()
 
@@ -121,12 +120,35 @@ def solve(dist_matrix_file_name=None):
         return []
 
 
+def add_same_route_constraints(data, manager, routing):
+    for vehicle_idx, route_constraint in enumerate(data['same_route']):
+        n2x = manager.NodeToIndex
+        cpsolver = routing.solver()
+
+        for stop in route_constraint:
+            vehicle_var = routing.VehicleVar(n2x(stop))
+            values = [-1, vehicle_idx]
+            cpsolver.Add(cpsolver.MemberCt(vehicle_var, values))
+
+
+def add_different_route_constraints(data, manager, routing):
+    for node1, node2 in data['different_route']:
+        n2x = manager.NodeToIndex
+        cpsolver = routing.solver()
+        vehicle_var_1 = routing.VehicleVar(n2x(node1))
+        vehicle_var_2 = routing.VehicleVar(n2x(node2))
+        cpsolver.Add(cpsolver.AllDifferent([vehicle_var_1, vehicle_var_2]))
+       # cpsolver.Add((vehicle_var_1 != vehicle_var_2) or (vehicle_var_1 == -1 and vehicle_var_2 == -1))
+        #cpsolver.Add(vehicle_var_2 == 2)
+       # cpsolver.Add(vehicle_var_1 == 3)
+
+
 def set_search_parameters():
     # Setting first solution heuristic.
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     search_parameters.first_solution_strategy = (
         # LOCAL_CHEAPEST_INSERTION 1491
-        routing_enums_pb2.FirstSolutionStrategy.LOCAL_CHEAPEST_INSERTION)  # PARALLEL_CHEAPEST_INSERTION
+        routing_enums_pb2.FirstSolutionStrategy.AUTOMATIC)  # PARALLEL_CHEAPEST_INSERTION
     search_parameters.local_search_metaheuristic = (
         routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
     search_parameters.time_limit.seconds = TIME_OUT
