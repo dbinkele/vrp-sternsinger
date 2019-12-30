@@ -12,7 +12,7 @@ from main.csv_processing import make_formatted_routes
 from main.template import render
 from main.util import dummy_dist_matrix, resolve_address_file, print_solution
 
-TIME_OUT = 260
+TIME_OUT = 60
 
 DEPOT = 0
 
@@ -36,6 +36,16 @@ def dist_matrix(file_name):
     with open(file_name) as json_file:
         data = json.load(json_file)
         return data['durations']
+
+
+def dwell_duration_callback(manager):
+    def demand_callback_hlp(from_index):
+        """Returns the demand of the node."""
+        # Convert from routing variable Index to demands NodeIndex.
+        from_node = manager.IndexToNode(from_index)
+        return DWEL_DURATION if from_node != 0 else 0
+
+    return demand_callback_hlp
 
 
 def solve(dist_matrix_file_name=None):
@@ -79,17 +89,9 @@ def solve(dist_matrix_file_name=None):
     distance_dimension = routing.GetDimensionOrDie(dimension_name)
     distance_dimension.SetGlobalSpanCostCoefficient(100)
 
-    # distance_dimension.SetSpanCostCoefficientForAllVehicles(0)
-
-    def demand_callback(from_index):
-        """Returns the demand of the node."""
-        # Convert from routing variable Index to demands NodeIndex.
-        from_node = manager.IndexToNode(from_index)
-        return DWEL_DURATION if from_node != 0 else 0
-
-    dwel_duration_callback_index = routing.RegisterUnaryTransitCallback(demand_callback)
+    dwell_duration_callback_index = routing.RegisterUnaryTransitCallback(dwell_duration_callback(manager))
     routing.AddDimension(
-        dwel_duration_callback_index,
+        dwell_duration_callback_index,
         0,  # null capacity slack
         (no_visits + 1) * DWEL_DURATION,  # vehicle maximum capacities
         True,  # start cumul to zero
@@ -99,9 +101,9 @@ def solve(dist_matrix_file_name=None):
     capacity_dimension.SetGlobalSpanCostCoefficient(100)
 
     # Allow to drop nodes.
-    #penalty = ub_tour
-    #for node in range(1, len(data['distance_matrix'])):
-     #   routing.AddDisjunction([manager.NodeToIndex(node)], penalty)
+    # penalty = ub_tour
+    # for node in range(1, len(data['distance_matrix'])):
+    #   routing.AddDisjunction([manager.NodeToIndex(node)], penalty)
 
     add_same_route_constraints(data, manager, routing)
     add_different_route_constraints(data, manager, routing)
@@ -115,7 +117,8 @@ def solve(dist_matrix_file_name=None):
 
     # Print solution on console.
     if solution:
-        return print_solution(data, manager, routing, solution)
+        dwell_duration = dwell_duration_callback(manager)
+        return print_solution(data, manager, routing, solution, dwell_duration)
     else:
         return []
 
@@ -138,9 +141,9 @@ def add_different_route_constraints(data, manager, routing):
         vehicle_var_1 = routing.VehicleVar(n2x(node1))
         vehicle_var_2 = routing.VehicleVar(n2x(node2))
         cpsolver.Add(cpsolver.AllDifferent([vehicle_var_1, vehicle_var_2]))
-       # cpsolver.Add((vehicle_var_1 != vehicle_var_2) or (vehicle_var_1 == -1 and vehicle_var_2 == -1))
-        #cpsolver.Add(vehicle_var_2 == 2)
-       # cpsolver.Add(vehicle_var_1 == 3)
+    # cpsolver.Add((vehicle_var_1 != vehicle_var_2) or (vehicle_var_1 == -1 and vehicle_var_2 == -1))
+    # cpsolver.Add(vehicle_var_2 == 2)
+    # cpsolver.Add(vehicle_var_1 == 3)
 
 
 def set_search_parameters():
@@ -148,7 +151,7 @@ def set_search_parameters():
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     search_parameters.first_solution_strategy = (
         # LOCAL_CHEAPEST_INSERTION 1491
-        routing_enums_pb2.FirstSolutionStrategy.AUTOMATIC)  # PARALLEL_CHEAPEST_INSERTION
+        routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)  # PARALLEL_CHEAPEST_INSERTION
     search_parameters.local_search_metaheuristic = (
         routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
     search_parameters.time_limit.seconds = TIME_OUT
@@ -157,10 +160,11 @@ def set_search_parameters():
     # search_parameters.use_full_propagation = True
     # search_parameters.use_cp_sat = 3
     # search_parameters.use_cp = 3
-    search_parameters.local_search_operators.use_tsp_opt = 3
-    search_parameters.local_search_operators.use_make_chain_inactive = 3
-    search_parameters.local_search_operators.use_extended_swap_active = 3
+    # search_parameters.local_search_operators.use_tsp_opt = 3
+    # search_parameters.local_search_operators.use_make_chain_inactive = 3
+    # search_parameters.local_search_operators.use_extended_swap_active = 3
     search_parameters.local_search_operators.use_path_lns = 3
+    #search_parameters.local_search_operators.use_full_path_lns = 3
 
     # use_or_opt: BOOL_TRUE
     # use_lin_kernighan: BOOL_TRUE
