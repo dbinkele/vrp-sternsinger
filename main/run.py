@@ -12,7 +12,7 @@ from main.csv_processing import make_formatted_routes
 from main.template import render
 from main.util import dummy_dist_matrix, resolve_address_file, print_solution
 
-TIME_OUT = 60
+TIME_OUT = 320
 
 DEPOT = 0
 
@@ -150,21 +150,22 @@ def set_search_parameters():
     # Setting first solution heuristic.
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     search_parameters.first_solution_strategy = (
-        # LOCAL_CHEAPEST_INSERTION 1491
-        routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)  # PARALLEL_CHEAPEST_INSERTION
+        routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)  # PATH_CHEAPEST_ARC 6990
     search_parameters.local_search_metaheuristic = (
         routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
     search_parameters.time_limit.seconds = TIME_OUT
     # search_parameters.log_search = True
     # search_parameters.use_depth_first_search = True
     # search_parameters.use_full_propagation = True
-    # search_parameters.use_cp_sat = 3
+    #search_parameters.use_cp_sat = 3
     # search_parameters.use_cp = 3
     # search_parameters.local_search_operators.use_tsp_opt = 3
     # search_parameters.local_search_operators.use_make_chain_inactive = 3
     # search_parameters.local_search_operators.use_extended_swap_active = 3
     search_parameters.local_search_operators.use_path_lns = 3
-    #search_parameters.local_search_operators.use_full_path_lns = 3
+    search_parameters.local_search_operators.use_full_path_lns = 3
+    #search_parameters.local_search_operators.use_tsp_lns = 3
+    search_parameters.local_search_operators.use_inactive_lns = 3
 
     # use_or_opt: BOOL_TRUE
     # use_lin_kernighan: BOOL_TRUE
@@ -173,9 +174,6 @@ def set_search_parameters():
     # use_swap_active: BOOL_TRUE
 
     # : BOOL_FALSE
-    # use_full_path_lns: BOOL_FALSE
-    # use_tsp_lns: BOOL_FALSE
-    # use_inactive_lns: BOOL_FALSE
     # use_node_pair_swap_active: BOOL_TRUE
     # use_relocate_and_make_active: BOOL_FALSE
     # use_exchange_pair: BOOL_TRUE
@@ -183,7 +181,7 @@ def set_search_parameters():
     # use_light_relocate_pair: BOOL_TRUE
     # use_relocate_subtrip: BOOL_TRUE
     # use_exchange_subtrip: BOOL_TRUE
-
+    #search_parameters.guided_local_search_lambda_coefficient = 0.001
     return search_parameters
 
 
