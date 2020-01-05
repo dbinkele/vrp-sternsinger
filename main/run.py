@@ -17,7 +17,7 @@ from main.util import resolve_address_file, print_solution
 # 7936/52697
 MAX_TIME_DURATION = 60 * 60 * 360
 
-TIME_OUT = 30  # 1220  # 7624/51012
+TIME_OUT = 130
 
 DEPOT = 0
 
@@ -42,10 +42,8 @@ def create_data_model(file_name, constraints_file):
                   'same_route': constraints['same_route'],
                   'different_route': constraints['different_route'],
                   'dwell_duration': constraints['dwell_duration'],
-                  'time_windows': {
-                0: (0, 500),
-                5: (3600, 3600 * 24),  #
-            }}
+                  'time_windows': constraints['time_windows']
+                  }
         return result
 
 
@@ -166,19 +164,19 @@ def add_time_windows(data, manager, routing, time_dimension):
     for location_idx in range(len(data['time_matrix'])):
         if location_idx == 0:
             continue
-        time_window = data['time_windows'].get(location_idx, TOTAL_TIME_WINDOW)
+        time_window = data['time_windows'].get(str(location_idx), TOTAL_TIME_WINDOW)
         index = manager.NodeToIndex(location_idx)
         time_dimension.CumulVar(index).SetRange(time_window[0], time_window[1])
     # Add time window constraints for each vehicle start node.
     for vehicle_id in range(NUM_VEHICLES):
         index = routing.Start(vehicle_id)
-        time_dimension.CumulVar(index).SetRange(data['time_windows'][0][0],
-                                                data['time_windows'][0][1])
+        time_dimension.CumulVar(index).SetRange(data['time_windows']['0'][0],
+                                                data['time_windows']['0'][1])
     for i in range(NUM_VEHICLES):
         routing.AddVariableMinimizedByFinalizer(
             time_dimension.CumulVar(routing.Start(i)))
-    routing.AddVariableMinimizedByFinalizer(
-        time_dimension.CumulVar(routing.End(i)))
+        routing.AddVariableMinimizedByFinalizer(
+            time_dimension.CumulVar(routing.End(i)))
 
 
 def add_same_route_constraints(data, manager, routing):
