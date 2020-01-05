@@ -8,7 +8,7 @@ from main.util import restrict_to_keys
 
 
 def to_address_line(json_address):
-    address_slices = restrict_to_keys(json_address, ['code', 'city', 'street', 'number']).values()
+    address_slices = restrict_to_keys(json_address, ['code', 'city', 'street', 'number', 'name', 'hint']).values()
     return ' '.join(address_slices)
 
 

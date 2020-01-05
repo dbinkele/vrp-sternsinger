@@ -1,1 +1,586 @@
-[{"code": "71739", "city": "Oberriexingen", "street": "M\u00f6rikestrasse", "number": "1", "lat": "48.9277675", "lon": "9.02623884378844"}, {"code": "71739", "city": "Oberriexingen", "street": "Eichendorffstra\u00dfe", "number": "100", "lat": "48.9283088", "lon": "9.0237616"}, {"code": "71739", "city": "Oberriexingen", "street": "Hauptstra\u00dfe", "number": "1", "lat": "48.9269853", "lon": "9.02938158920602"}, {"code": "71739", "city": "Oberriexingen", "street": "Kernerstra\u00dfe", "number": "4", "lat": "48.9292247", "lon": "9.03017516003286"}, {"code": "71739", "city": "Oberriexingen", "street": "Sachsenheimerstra\u00dfe", "number": "25", "lat": "48.930401", "lon": "9.03128499590181"}, {"code": "71739", "city": "Oberriexingen", "street": "Wernerstra\u00dfe", "number": "30", "lat": "48.92509795", "lon": "9.02459330510552"}, {"code": "71739", "city": "Oberriexingen", "street": "Hauffstra\u00dfe", "number": "5", "lat": "48.9263006", "lon": "9.02193228368879"}, {"code": "71739", "city": "Oberriexingen", "street": "Rosenweg", "number": "3", "lat": "48.9288568", "lon": "9.0178661115032"}, {"code": "71739", "city": "Oberriexingen", "street": "Ulmenweg", "number": "1", "lat": "48.92934685", "lon": "9.01679479981929"}, {"code": "71739", "city": "Oberriexingen", "street": "Weilerstra\u00dfe", "number": "3", "lat": "48.9283358", "lon": "9.02639170418266"}, {"code": "71739", "city": "Oberriexingen", "street": "Zwingerstra\u00dfe", "number": "10", "lat": "48.926477", "lon": "9.0277248"}, {"code": "71739", "city": "Oberriexingen", "street": "Enzgasse", "number": "4", "lat": "48.9257267", "lon": "9.0298688"}, {"code": "71739", "city": "Oberriexingen", "street": "Torstra\u00dfe", "number": "5", "lat": "48.9269081", "lon": "9.0300202"}, {"code": "71739", "city": "Oberriexingen", "street": "Gartenstra\u00dfe", "number": "10", "lat": "48.92728915", "lon": "9.03046294149685"}, {"code": "71739", "city": "Oberriexingen", "street": "H\u00f6lderlinstra\u00dfe", "number": "9", "lat": "48.9288644", "lon": "9.0280675"}, {"code": "71739", "city": "Oberriexingen", "street": "Hohe Stra\u00dfe", "number": "5", "lat": "48.9291734", "lon": "9.02585975131148"}, {"code": "71739", "city": "Oberriexingen", "street": "Finkenweg", "number": "3", "lat": "48.9292624", "lon": "9.0252495"}, {"code": "71739", "city": "Oberriexingen", "street": "Amselweg", "number": "4", "lat": "48.93011855", "lon": "9.02375920626398"}, {"code": "71739", "city": "Oberriexingen", "street": "August-L\u00e4mmle-Stra\u00dfe", "number": "5", "lat": "48.92890715", "lon": "9.02245750839119"}, {"code": "71739", "city": "Oberriexingen", "street": "Theodor-Heuss-Stra\u00dfe", "number": "4", "lat": "48.9291519", "lon": "9.0221171"}, {"code": "71739", "city": "Oberriexingen", "street": "Birkenweg", "number": "20", "lat": "48.9295634", "lon": "9.01976863702184"}, {"code": "71739", "city": "Oberriexingen", "street": "Lilienweg", "number": "10", "lat": "48.9276582", "lon": "9.0184792"}, {"code": "71739", "city": "Oberriexingen", "street": "Primelweg", "number": "2", "lat": "48.9281832", "lon": "9.0177647"}, {"code": "71739", "city": "Oberriexingen", "street": "Gerd-Gaiser-Stra\u00dfe", "number": "1", "lat": "48.9291835", "lon": "9.01945425104676"}, {"code": "71739", "city": "Oberriexingen", "street": "Gothestra\u00dfe", "number": "8", "lat": "48.9279023", "lon": "9.02381609965801"}, {"code": "71739", "city": "Oberriexingen", "street": "Theodor-Storm-Stra\u00dfe", "number": "9", "lat": "48.927228", "lon": "9.02215119582807"}, {"code": "71739", "city": "Oberriexingen", "street": "Silcherstra\u00dfe", "number": "12", "lat": "48.9254274", "lon": "9.02334721121527"}, {"code": "71739", "city": "Oberriexingen", "street": "M\u00fchlstra\u00dfe", "number": "2", "lat": "48.9247424", "lon": "9.02684040927273"}, {"code": "71739", "city": "Oberriexingen", "street": "Lerchenweg", "number": "2", "lat": "48.9303553", "lon": "9.02203694273883"}, {"code": "71739", "city": "Oberriexingen", "street": "Austra\u00dfe", "number": "8", "lat": "48.9290028", "lon": "9.0311596"}, {"code": "71739", "city": "Oberriexingen", "street": "H\u00e4gelesgasse", "number": "1", "lat": "48.92656825", "lon": "9.02908403982702"}, {"code": "71739", "city": "Oberriexingen", "street": "Backhausgasse", "number": "8", "lat": "48.9267999", "lon": "9.0296723"}, {"code": "71739", "city": "Oberriexingen", "street": "Torstra\u00dfe", "number": "2", "lat": "48.9269518", "lon": "9.0295643"}, {"code": "71739", "city": "Oberriexingen", "street": "Brunnengasse", "number": "5", "lat": "48.92583145", "lon": "9.0290258544316"}, {"code": "71739", "city": "Oberriexingen", "street": "Obere Gasse", "number": "11", "lat": "48.92588245", "lon": "9.02796496317682"}, {"code": "71739", "city": "Oberriexingen", "street": "Schwabstra\u00dfe", "number": "9", "lat": "48.926361", "lon": "9.0272279"}, {"code": "71739", "city": "Oberriexingen", "street": "Obere Gasse", "number": "3", "lat": "48.9264017", "lon": "9.02845823771473"}, {"code": "71739", "city": "Oberriexingen", "street": "Lindenstra\u00dfe", "number": "4", "lat": "48.92496575", "lon": "9.02709722784148"}, {"code": "71739", "city": "Oberriexingen", "street": "M\u00fchlstra\u00dfe", "number": "10", "lat": "48.9247784", "lon": "9.02626105"}, {"code": "71739", "city": "Oberriexingen", "street": "Enzpark", "number": "27", "lat": "48.92408505", "lon": "9.02311767425824"}, {"code": "71739", "city": "Oberriexingen", "street": "Uhlandweg", "number": "5", "lat": "48.92771215", "lon": "9.02790814916296"}, {"code": "71739", "city": "Oberriexingen", "street": "Wilhelmstra\u00dfe", "number": "8", "lat": "48.9281159", "lon": "9.02747659881371"}, {"code": "71739", "city": "Oberriexingen", "street": "Albertstra\u00dfe", "number": "5", "lat": "48.92631665", "lon": "9.02609091082289"}, {"code": "71739", "city": "Oberriexingen", "street": "M\u00f6rikestra\u00dfe", "number": "13", "lat": "48.92691455", "lon": "9.0251230816879"}, {"code": "71739", "city": "Oberriexingen", "street": "R\u00f6merstra\u00dfe", "number": "30", "lat": "48.93007975", "lon": "9.02548671705981"}, {"code": "71739", "city": "Oberriexingen", "street": "Lerchenweg", "number": "9", "lat": "48.9309148", "lon": "9.02259904573578"}, {"code": "71739", "city": "Oberriexingen", "street": "Starenweg", "number": "15", "lat": "48.9310222", "lon": "9.02289475883954"}, {"code": "71739", "city": "Oberriexingen", "street": "Stieglitzweg", "number": "3", "lat": "48.9322257", "lon": "9.02265686568198"}, {"code": "71739", "city": "Oberriexingen", "street": "Ringstra\u00dfe", "number": "9", "lat": "48.9333262", "lon": "9.02130521603604"}, {"code": "71739", "city": "Oberriexingen", "street": "Untere Gasse", "number": "34", "lat": "48.9248663", "lon": "9.02809124771502"}, {"code": "71739", "city": "Oberriexingen", "street": "Sachsenheimerstra\u00dfe", "number": "23", "lat": "48.9302744", "lon": "9.03107502581056"}, {"code": "71739", "city": "Oberriexingen", "street": "Sachsenheimerstra\u00dfe", "number": "17", "lat": "48.9294613", "lon": "9.03077606548745"}, {"code": "71739", "city": "Oberriexingen", "street": "Wernerstra\u00dfe", "number": "25", "lat": "48.92513115", "lon": "9.0259981"}, {"code": "71739", "city": "Oberriexingen", "street": "Meisenweg", "number": "16", "lat": "48.9309092", "lon": "9.02148314062993"}, {"code": "71739", "city": "Oberriexingen", "street": "Ahornweg", "number": "11", "lat": "48.92934265", "lon": "9.02096273701074"}, {"code": "71739", "city": "Oberriexingen", "street": "Rosenweg", "number": "24", "lat": "48.92865485", "lon": "9.019722544909"}, {"code": "71739", "city": "Oberriexingen", "street": "Dahlienweg", "number": "12", "lat": "48.92838095", "lon": "9.01921165"}, {"code": "71739", "city": "Oberriexingen", "street": "Lilienweg", "number": "9", "lat": "48.92837915", "lon": "9.01802725"}, {"code": "71739", "city": "Oberriexingen", "street": "Vaihinger Weg", "number": "6", "lat": "48.9275964", "lon": "9.017232"}, {"code": "71739", "city": "Oberriexingen", "street": "Birkenweg", "number": "5", "lat": "48.9300676", "lon": "9.02088405046744"}, {"code": "71739", "city": "Oberriexingen", "street": "Eichenweg", "number": "9", "lat": "48.92999215", "lon": "9.0182385343841"}, {"code": "71739", "city": "Oberriexingen", "street": "Akazienweg", "number": "13", "lat": "48.9300285", "lon": "9.01907963243781"}, {"code": "71739", "city": "Oberriexingen", "street": "Kastanienweg", "number": "9", "lat": "48.9299943", "lon": "9.0174757"}, {"code": "71739", "city": "Oberriexingen", "street": "Rosenweg", "number": "4", "lat": "48.9284984", "lon": "9.01660424142661"}, {"code": "71739", "city": "Oberriexingen", "street": "Theodor-Heuss-Stra\u00dfe", "number": "27", "lat": "48.92689005", "lon": "9.02037331487217"}, {"code": "71739", "city": "Oberriexingen", "street": "Karl-Kaltschmied Stra\u00dfe", "number": "11", "lat": "48.92436455", "lon": "9.02230430207307"}, {"code": "71739", "city": "Oberriexingen", "street": "Im Weizen", "number": "2", "lat": "48.93129305", "lon": "9.0202222125"}, {"code": "71739", "city": "Oberriexingen", "street": "Im Roggen", "number": "9", "lat": "48.93042985", "lon": "9.02005384141104"}, {"code": "71739", "city": "Oberriexingen", "street": "Dinkelweg", "number": "12", "lat": "48.93136465", "lon": "9.01940354580067"}, {"code": "71739", "city": "Oberriexingen", "street": "Emmerweg", "number": "5", "lat": "48.93099875", "lon": "9.01990708581891"}, {"code": "71739", "city": "Oberriexingen", "street": "Zeisigweg", "number": "8", "lat": "48.93184895", "lon": "9.0201792515758"}, {"code": "71739", "city": "Oberriexingen", "street": "Brunnengasse", "number": "10", "lat": "48.92533865", "lon": "9.029284618593"}, {"code": "71739", "city": "Oberriexingen", "street": "Hauptstra\u00dfe", "number": "25", "lat": "48.9256961", "lon": "9.02857386720235"}]
+[
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "M\u00f6rikestrasse",
+    "number": "1",
+    "lat": "48.9277675",
+    "lon": "9.02623884378844"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Eichendorffstra\u00dfe",
+    "number": "100",
+    "lat": "48.9283088",
+    "lon": "9.0237616"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Hauptstra\u00dfe",
+    "number": "1",
+    "lat": "48.9269853",
+    "lon": "9.02938158920602"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Kernerstra\u00dfe",
+    "number": "4",
+    "lat": "48.9292247",
+    "lon": "9.03017516003286"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Sachsenheimerstra\u00dfe",
+    "number": "25",
+    "lat": "48.930401",
+    "lon": "9.03128499590181"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Wernerstra\u00dfe",
+    "number": "30",
+    "lat": "48.92509795",
+    "lon": "9.02459330510552"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Hauffstra\u00dfe",
+    "number": "5",
+    "lat": "48.9263006",
+    "lon": "9.02193228368879"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Rosenweg",
+    "number": "3",
+    "lat": "48.9288568",
+    "lon": "9.0178661115032"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Ulmenweg",
+    "number": "1",
+    "lat": "48.92934685",
+    "lon": "9.01679479981929"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Weilerstra\u00dfe",
+    "number": "3",
+    "lat": "48.9283358",
+    "lon": "9.02639170418266"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Zwingerstra\u00dfe",
+    "number": "10",
+    "lat": "48.926477",
+    "lon": "9.0277248"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Enzgasse",
+    "number": "4",
+    "lat": "48.9257267",
+    "lon": "9.0298688"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Torstra\u00dfe",
+    "number": "5",
+    "lat": "48.9269081",
+    "lon": "9.0300202"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Gartenstra\u00dfe",
+    "number": "10",
+    "lat": "48.92728915",
+    "lon": "9.03046294149685"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "H\u00f6lderlinstra\u00dfe",
+    "number": "9",
+    "lat": "48.9288644",
+    "lon": "9.0280675"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Hohe Stra\u00dfe",
+    "number": "5",
+    "lat": "48.9291734",
+    "lon": "9.02585975131148"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Finkenweg",
+    "number": "3",
+    "lat": "48.9292624",
+    "lon": "9.0252495"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Amselweg",
+    "number": "4",
+    "lat": "48.93011855",
+    "lon": "9.02375920626398"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "August-L\u00e4mmle-Stra\u00dfe",
+    "number": "5",
+    "lat": "48.92890715",
+    "lon": "9.02245750839119"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Theodor-Heuss-Stra\u00dfe",
+    "number": "4",
+    "lat": "48.9291519",
+    "lon": "9.0221171"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Birkenweg",
+    "number": "20",
+    "lat": "48.9295634",
+    "lon": "9.01976863702184"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Lilienweg",
+    "number": "10",
+    "lat": "48.9276582",
+    "lon": "9.0184792"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Primelweg",
+    "number": "2",
+    "lat": "48.9281832",
+    "lon": "9.0177647"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Gerd-Gaiser-Stra\u00dfe",
+    "number": "1",
+    "lat": "48.9291835",
+    "lon": "9.01945425104676"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Gothestra\u00dfe",
+    "number": "8",
+    "lat": "48.9279023",
+    "lon": "9.02381609965801"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Theodor-Storm-Stra\u00dfe",
+    "number": "9",
+    "lat": "48.927228",
+    "lon": "9.02215119582807"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Silcherstra\u00dfe",
+    "number": "12",
+    "lat": "48.9254274",
+    "lon": "9.02334721121527"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "M\u00fchlstra\u00dfe",
+    "number": "2",
+    "lat": "48.9247424",
+    "lon": "9.02684040927273"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Lerchenweg",
+    "number": "2",
+    "lat": "48.9303553",
+    "lon": "9.02203694273883"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Austra\u00dfe",
+    "number": "8",
+    "lat": "48.9290028",
+    "lon": "9.0311596"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "H\u00e4gelesgasse",
+    "number": "1",
+    "lat": "48.92656825",
+    "lon": "9.02908403982702"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Backhausgasse",
+    "number": "8",
+    "lat": "48.9267999",
+    "lon": "9.0296723"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Torstra\u00dfe",
+    "number": "2",
+    "lat": "48.9269518",
+    "lon": "9.0295643"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Brunnengasse",
+    "number": "5",
+    "lat": "48.92583145",
+    "lon": "9.0290258544316"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Obere Gasse",
+    "number": "11",
+    "lat": "48.92588245",
+    "lon": "9.02796496317682"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Schwabstra\u00dfe",
+    "number": "9",
+    "lat": "48.926361",
+    "lon": "9.0272279"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Obere Gasse",
+    "number": "3",
+    "lat": "48.9264017",
+    "lon": "9.02845823771473"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Lindenstra\u00dfe",
+    "number": "4",
+    "lat": "48.92496575",
+    "lon": "9.02709722784148"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "M\u00fchlstra\u00dfe",
+    "number": "10",
+    "lat": "48.9247784",
+    "lon": "9.02626105"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Enzpark",
+    "number": "27",
+    "lat": "48.92408505",
+    "lon": "9.02311767425824"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Uhlandweg",
+    "number": "5",
+    "lat": "48.92771215",
+    "lon": "9.02790814916296"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Wilhelmstra\u00dfe",
+    "number": "8",
+    "lat": "48.9281159",
+    "lon": "9.02747659881371"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Albertstra\u00dfe",
+    "number": "5",
+    "lat": "48.92631665",
+    "lon": "9.02609091082289"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "M\u00f6rikestra\u00dfe",
+    "number": "13",
+    "lat": "48.92691455",
+    "lon": "9.0251230816879"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "R\u00f6merstra\u00dfe",
+    "number": "30",
+    "lat": "48.93007975",
+    "lon": "9.02548671705981"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Lerchenweg",
+    "number": "9",
+    "lat": "48.9309148",
+    "lon": "9.02259904573578"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Starenweg",
+    "number": "15",
+    "lat": "48.9310222",
+    "lon": "9.02289475883954"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Stieglitzweg",
+    "number": "3",
+    "lat": "48.9322257",
+    "lon": "9.02265686568198"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Ringstra\u00dfe",
+    "number": "9",
+    "lat": "48.9333262",
+    "lon": "9.02130521603604"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Untere Gasse",
+    "number": "34",
+    "lat": "48.9248663",
+    "lon": "9.02809124771502"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Sachsenheimerstra\u00dfe",
+    "number": "23",
+    "lat": "48.9302744",
+    "lon": "9.03107502581056"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Sachsenheimerstra\u00dfe",
+    "number": "17",
+    "lat": "48.9294613",
+    "lon": "9.03077606548745"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Wernerstra\u00dfe",
+    "number": "25",
+    "lat": "48.92513115",
+    "lon": "9.0259981"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Meisenweg",
+    "number": "16",
+    "lat": "48.9309092",
+    "lon": "9.02148314062993"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Ahornweg",
+    "number": "11",
+    "lat": "48.92934265",
+    "lon": "9.02096273701074"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Rosenweg",
+    "number": "24",
+    "lat": "48.92865485",
+    "lon": "9.019722544909"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Dahlienweg",
+    "number": "12",
+    "lat": "48.92838095",
+    "lon": "9.01921165"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Lilienweg",
+    "number": "9",
+    "lat": "48.92837915",
+    "lon": "9.01802725"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Vaihinger Weg",
+    "number": "6",
+    "lat": "48.9275964",
+    "lon": "9.017232"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Birkenweg",
+    "number": "5",
+    "lat": "48.9300676",
+    "lon": "9.02088405046744"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Eichenweg",
+    "number": "9",
+    "lat": "48.92999215",
+    "lon": "9.0182385343841"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Akazienweg",
+    "number": "13",
+    "lat": "48.9300285",
+    "lon": "9.01907963243781"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Kastanienweg",
+    "number": "9",
+    "lat": "48.9299943",
+    "lon": "9.0174757"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Rosenweg",
+    "number": "4",
+    "lat": "48.9284984",
+    "lon": "9.01660424142661"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Theodor-Heuss-Stra\u00dfe",
+    "number": "27",
+    "lat": "48.92689005",
+    "lon": "9.02037331487217"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Karl-Kaltschmied Stra\u00dfe",
+    "number": "11",
+    "lat": "48.92436455",
+    "lon": "9.02230430207307"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Im Weizen",
+    "number": "2",
+    "lat": "48.93129305",
+    "lon": "9.0202222125"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Im Roggen",
+    "number": "9",
+    "lat": "48.93042985",
+    "lon": "9.02005384141104"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Dinkelweg",
+    "number": "12",
+    "lat": "48.93136465",
+    "lon": "9.01940354580067"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Emmerweg",
+    "number": "5",
+    "lat": "48.93099875",
+    "lon": "9.01990708581891"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Zeisigweg",
+    "number": "8",
+    "lat": "48.93184895",
+    "lon": "9.0201792515758"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Brunnengasse",
+    "number": "10",
+    "lat": "48.92533865",
+    "lon": "9.029284618593"
+  },
+  {
+    "code": "71739",
+    "city": "Oberriexingen",
+    "street": "Hauptstra\u00dfe",
+    "number": "25",
+    "lat": "48.9256961",
+    "lon": "9.02857386720235"
+  }
+]
