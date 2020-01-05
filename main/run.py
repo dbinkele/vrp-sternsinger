@@ -41,14 +41,8 @@ def create_data_model(file_name, constraints_file):
                   'depot': DEPOT,
                   'same_route': constraints['same_route'],
                   'different_route': constraints['different_route'],
-                  'dwell_duration': {
-                5: 820,
-                6: 150,
-                19: 150,
-                48: 150,
-                75: 900,
-                76: 150
-            }, 'time_windows': {
+                  'dwell_duration': constraints['dwell_duration'],
+                  'time_windows': {
                 0: (0, 500),
                 5: (3600, 3600 * 24),  #
             }}
@@ -78,7 +72,7 @@ def dwell_duration_callback(manager, dwel_duration):
         """Returns the demand of the node."""
         # Convert from routing variable Index to demands NodeIndex.
         from_node = manager.IndexToNode(from_index)
-        return dwel_duration.get(from_node, DWEL_DURATION) if from_node != 0 else 0
+        return dwel_duration.get(str(from_node), DWEL_DURATION) if from_node != 0 else 0
 
     return demand_callback_hlp
 
