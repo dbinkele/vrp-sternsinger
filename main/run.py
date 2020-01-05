@@ -36,24 +36,23 @@ def create_data_model(file_name, constraints_file):
     with open(constraints_file) as constraints_file_handle:
         constraints = json.load(constraints_file_handle)
 
-        return {'time_matrix': time_matrix(file_name, constraints['fixed_arcs']),
-                'num_vehicles': NUM_VEHICLES,
-                'depot': DEPOT,
-                'same_route': [[61, 77], [], [7, 16], [71], [39], [24, 34], []],
-                'different_route': [],
-                'dwell_duration': {
-                    5: 820,
-                    6: 150,
-                    19: 150,
-                    48: 150,
-                    75: 900,
-                    76: 150
-                },
-                'time_windows': {
-                    0: (0, 500),
-                    5: (3600, 3600 * 24),  #
-                }
-                }
+        result = {'time_matrix': time_matrix(file_name, constraints['fixed_arcs']),
+                  'num_vehicles': NUM_VEHICLES,
+                  'depot': DEPOT,
+                  'same_route': constraints['same_route'],
+                  'different_route': constraints['different_route'],
+                  'dwell_duration': {
+                5: 820,
+                6: 150,
+                19: 150,
+                48: 150,
+                75: 900,
+                76: 150
+            }, 'time_windows': {
+                0: (0, 500),
+                5: (3600, 3600 * 24),  #
+            }}
+        return result
 
 
 def time_matrix(file_name, fixed_arcs):
