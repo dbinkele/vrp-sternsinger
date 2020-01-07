@@ -15,19 +15,7 @@ from main.template import render
 from main.util import resolve_address_file, print_solution
 
 # 7936/52697
-MAX_TIME_DURATION = 60 * 60 * 360
-
-TIME_OUT = 800
-
-DEPOT = 0
-
-NUM_VEHICLES = 7
-
-DWEL_DURATION = 500
-
-TIME_WINDOWS = True
-
-TOTAL_TIME_WINDOW = (0, 60 * 60 * 24)
+MAX_TIME_DURATION = 60 * 60 * 360 * 1000
 
 
 def create_data_model(file_name, constraints_file):
@@ -36,14 +24,9 @@ def create_data_model(file_name, constraints_file):
     with open(constraints_file) as constraints_file_handle:
         constraints = json.load(constraints_file_handle)
 
-        result = {'time_matrix': time_matrix(file_name, constraints['fixed_arcs']),
-                  'num_vehicles': NUM_VEHICLES,
-                  'depot': DEPOT,
-                  'same_route': constraints['same_route'],
-                  'different_route': constraints['different_route'],
-                  'dwell_duration': constraints['dwell_duration'],
-                  'time_windows': constraints['time_windows']
+        result = {'time_matrix': time_matrix(file_name, constraints['fixed_arcs'])
                   }
+        result.update(constraints)
         return result
 
 
@@ -78,6 +61,7 @@ def solve(dist_matrix_file_name, constraints_file):
 
     # Create Routing Model.
     routing = pywrapcp.RoutingModel(manager)
+    default_dwell_duration = data['dwell_duration']['-1']
 
     # Create and register a transit callback.
     def time_callback(from_index, to_index):
@@ -85,7 +69,7 @@ def solve(dist_matrix_file_name, constraints_file):
         # Convert from routing variable Index to distance matrix NodeIndex.
         from_node = manager.IndexToNode(from_index)
         to_node = manager.IndexToNode(to_index)
-        dwell_duration = data['dwell_duration'].get(str(from_node), DWEL_DURATION) if from_node != 0 else 0
+        dwell_duration = data['dwell_duration'].get(str(from_node), default_dwell_duration) if from_node != 0 else 0
         return data['time_matrix'][from_node][to_node] + dwell_duration
 
     transit_callback_index = routing.RegisterTransitCallback(time_callback)
@@ -93,19 +77,20 @@ def solve(dist_matrix_file_name, constraints_file):
     # Define cost of each arc.
     routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
 
+    time_windows_exist = len(data['time_windows']) > 0
     # Add Distance constraint.
     dimension_name = 'Time'
     routing.AddDimension(
         transit_callback_index,
-        60 * 60 if TIME_WINDOWS else 0,  # no slack
+        60 * 60 if time_windows_exist else 0,  # no slack
         # 1773,  # vehicle maximum travel distance
         100000,  # 1608
-        True,  # start cumul to zero
+        not time_windows_exist,  # start cumul to zero
         dimension_name)
     time_dimension = routing.GetDimensionOrDie(dimension_name)
     time_dimension.SetGlobalSpanCostCoefficient(100)
 
-    if TIME_WINDOWS:
+    if time_windows_exist:
         add_time_windows(data, manager, routing, time_dimension)
 
     # Allow to drop nodes.
@@ -116,7 +101,7 @@ def solve(dist_matrix_file_name, constraints_file):
     add_same_route_constraints(data, manager, routing)
     add_different_route_constraints(data, manager, routing)
 
-    search_parameters = set_search_parameters()
+    search_parameters = set_search_parameters(data['timeout'])
 
     # Solve the problem.
     # initial_assignment = routing.ReadAssignmentFromRoutes(INITIAL_SOLUTION, True)
@@ -127,7 +112,7 @@ def solve(dist_matrix_file_name, constraints_file):
 
     # Print solution on console.
     if solution:
-        return print_solution(data, manager, routing, solution)
+        return print_solution(data, manager, routing, solution, routing.GetDimensionOrDie(dimension_name))
     else:
         return []
 
@@ -137,16 +122,16 @@ def add_time_windows(data, manager, routing, time_dimension):
     for location_idx in range(len(data['time_matrix'])):
         if location_idx == 0:
             continue
-        time_window = data['time_windows'].get(location_idx, None)
+        time_window = data['time_windows'].get(str(location_idx), None)
         if time_window:
             index = manager.NodeToIndex(location_idx)
             time_dimension.CumulVar(index).SetRange(time_window[0], time_window[1])
     # Add time window constraints for each vehicle start node.
-    for vehicle_id in range(NUM_VEHICLES):
+    for vehicle_id in range(data['num_vehicles']):
         index = routing.Start(vehicle_id)
         time_dimension.CumulVar(index).SetRange(data['time_windows']['0'][0],
                                                 data['time_windows']['0'][1])
-    for i in range(NUM_VEHICLES):
+    for i in range(data['num_vehicles']):
         routing.AddVariableMinimizedByFinalizer(
             time_dimension.CumulVar(routing.Start(i)))
         routing.AddVariableMinimizedByFinalizer(
@@ -176,14 +161,14 @@ def add_different_route_constraints(data, manager, routing):
     # cpsolver.Add(vehicle_var_1 == 3)
 
 
-def set_search_parameters():
+def set_search_parameters(time_out):
     # Setting first solution heuristic.
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     search_parameters.first_solution_strategy = (
         routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)  # PATH_CHEAPEST_ARC 6990
     search_parameters.local_search_metaheuristic = (
         routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
-    search_parameters.time_limit.seconds = TIME_OUT
+    search_parameters.time_limit.seconds = time_out
     # search_parameters.log_search = True
     # search_parameters.use_depth_first_search = True
     search_parameters.use_full_propagation = 3
@@ -211,7 +196,7 @@ def set_search_parameters():
     # use_light_relocate_pair: BOOL_TRUE
     # use_relocate_subtrip: BOOL_TRUE
     # use_exchange_subtrip: BOOL_TRUE
-    # search_parameters.guided_local_search_lambda_coefficient = 0.001
+    search_parameters.guided_local_search_lambda_coefficient = 0.25
 
     return search_parameters
 

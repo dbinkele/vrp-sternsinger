@@ -91,7 +91,7 @@ def resolve_address_file():
     return address_file
 
 
-def print_solution(data, manager, routing, solution):
+def print_solution(data, manager, routing, solution, time_dimesnion):
     """Prints solution on console."""
     max_route_distance = 0
     sum_routes_distances = 0
@@ -104,7 +104,9 @@ def print_solution(data, manager, routing, solution):
         route_distance = 0
         route_len = 0
         while not routing.IsEnd(index):
-            plan_output += ' {} -> '.format(manager.IndexToNode(index))
+            time_var = time_dimesnion.CumulVar(index)
+            plan_output += ' {0} t({1},{2})-> '.format(manager.IndexToNode(index), solution.Min(time_var),
+                                                       solution.Max(time_var))
             previous_index = index
             index = solution.Value(routing.NextVar(index))
             routes[vehicle_id].append(manager.IndexToNode(index))

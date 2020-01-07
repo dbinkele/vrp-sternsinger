@@ -1,4 +1,7 @@
 {
+  "timeout": 130,
+  "depot": 0,
+  "num_vehicles": 7,
   "fixed_arcs" : [
   ],
   "same_route": [
@@ -6,6 +9,7 @@
   ],
   "different_route": [],
   "dwell_duration": {
+                "-1": 500,
                 "5": 820,
                 "6": 150,
                 "19": 150,
