@@ -17,7 +17,7 @@ from main.util import resolve_address_file, print_solution
 # 7936/52697
 MAX_TIME_DURATION = 60 * 60 * 360
 
-TIME_OUT = 130
+TIME_OUT = 800
 
 DEPOT = 0
 
@@ -25,7 +25,7 @@ NUM_VEHICLES = 7
 
 DWEL_DURATION = 500
 
-TIME_WINDOWS = False
+TIME_WINDOWS = True
 
 TOTAL_TIME_WINDOW = (0, 60 * 60 * 24)
 
@@ -53,26 +53,14 @@ def time_matrix(file_name, fixed_arcs):
         durations = data['durations']
 
         for fixed_arc in fixed_arcs:
-            i = 0
-            while i < len(fixed_arc) - 1:
+            for i in range(0, len(fixed_arc) - 1):
                 durations_to_nodes_for_i = durations[fixed_arc[i]]
                 for to_node_idx in range(0, len(durations_to_nodes_for_i)):
                     if to_node_idx != fixed_arc[i + 1]:
                         durations_to_nodes_for_i[to_node_idx] = MAX_TIME_DURATION
                 durations[fixed_arc[i]] = durations_to_nodes_for_i
-                i += 1
 
         return durations
-
-
-def dwell_duration_callback(manager, dwel_duration):
-    def demand_callback_hlp(from_index):
-        """Returns the demand of the node."""
-        # Convert from routing variable Index to demands NodeIndex.
-        from_node = manager.IndexToNode(from_index)
-        return dwel_duration.get(str(from_node), DWEL_DURATION) if from_node != 0 else 0
-
-    return demand_callback_hlp
 
 
 def solve(dist_matrix_file_name, constraints_file):
@@ -97,8 +85,8 @@ def solve(dist_matrix_file_name, constraints_file):
         # Convert from routing variable Index to distance matrix NodeIndex.
         from_node = manager.IndexToNode(from_index)
         to_node = manager.IndexToNode(to_index)
-
-        return data['time_matrix'][from_node][to_node]
+        dwell_duration = data['dwell_duration'].get(str(from_node), DWEL_DURATION) if from_node != 0 else 0
+        return data['time_matrix'][from_node][to_node] + dwell_duration
 
     transit_callback_index = routing.RegisterTransitCallback(time_callback)
 
@@ -111,27 +99,14 @@ def solve(dist_matrix_file_name, constraints_file):
         transit_callback_index,
         60 * 60 if TIME_WINDOWS else 0,  # no slack
         # 1773,  # vehicle maximum travel distance
-        10000,  # 1608
-        not TIME_WINDOWS,  # start cumul to zero
+        100000,  # 1608
+        True,  # start cumul to zero
         dimension_name)
     time_dimension = routing.GetDimensionOrDie(dimension_name)
     time_dimension.SetGlobalSpanCostCoefficient(100)
 
     if TIME_WINDOWS:
         add_time_windows(data, manager, routing, time_dimension)
-
-    ####### Dwell-Duration
-    dwell_duration_callback_index = routing.RegisterUnaryTransitCallback(
-        dwell_duration_callback(manager, data['dwell_duration']))
-    routing.AddDimension(
-        dwell_duration_callback_index,
-        0,  # null capacity slack
-        (no_visits + 1) * DWEL_DURATION,  # vehicle maximum capacities
-        True,  # start cumul to zero
-        'DWEL_DURATION')
-
-    capacity_dimension = routing.GetDimensionOrDie('DWEL_DURATION')
-    capacity_dimension.SetGlobalSpanCostCoefficient(100)
 
     # Allow to drop nodes.
     # penalty = ub_tour
@@ -152,21 +127,20 @@ def solve(dist_matrix_file_name, constraints_file):
 
     # Print solution on console.
     if solution:
-        dwell_duration = dwell_duration_callback(manager, data['dwell_duration'])
-        return print_solution(data, manager, routing, solution, dwell_duration)
+        return print_solution(data, manager, routing, solution)
     else:
         return []
 
 
 def add_time_windows(data, manager, routing, time_dimension):
-    ####Time-Windows
     # Add time window constraints for each location except depot.
     for location_idx in range(len(data['time_matrix'])):
         if location_idx == 0:
             continue
-        time_window = data['time_windows'].get(str(location_idx), TOTAL_TIME_WINDOW)
-        index = manager.NodeToIndex(location_idx)
-        time_dimension.CumulVar(index).SetRange(time_window[0], time_window[1])
+        time_window = data['time_windows'].get(location_idx, None)
+        if time_window:
+            index = manager.NodeToIndex(location_idx)
+            time_dimension.CumulVar(index).SetRange(time_window[0], time_window[1])
     # Add time window constraints for each vehicle start node.
     for vehicle_id in range(NUM_VEHICLES):
         index = routing.Start(vehicle_id)

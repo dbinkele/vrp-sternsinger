@@ -91,7 +91,7 @@ def resolve_address_file():
     return address_file
 
 
-def print_solution(data, manager, routing, solution, dwell_duration):
+def print_solution(data, manager, routing, solution):
     """Prints solution on console."""
     max_route_distance = 0
     sum_routes_distances = 0
@@ -110,7 +110,6 @@ def print_solution(data, manager, routing, solution, dwell_duration):
             routes[vehicle_id].append(manager.IndexToNode(index))
             route_distance += routing.GetArcCostForVehicle(
                 previous_index, index, vehicle_id)
-            route_distance += dwell_duration(index)
             route_len += 1
 
         total_route_len += route_len
