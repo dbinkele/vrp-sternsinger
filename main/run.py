@@ -98,7 +98,8 @@ def solve(dist_matrix_file_name, constraints_file):
     # for node in range(1, len(data['time_matrix'])):
     #   routing.AddDisjunction([manager.NodeToIndex(node)], penalty)
 
-    add_same_route_constraints(data, manager, routing)
+    add_same_route_constraints(data['same_route'], manager, routing)
+    add_same_route_constraints(data['same_route_ordered'], manager, routing, time_dimension)
     add_different_route_constraints(data, manager, routing)
 
     search_parameters = set_search_parameters(data['timeout'])
@@ -138,15 +139,18 @@ def add_time_windows(data, manager, routing, time_dimension):
             time_dimension.CumulVar(routing.End(i)))
 
 
-def add_same_route_constraints(data, manager, routing):
-    for vehicle_idx, route_constraint in enumerate(data['same_route']):
+def add_same_route_constraints(same_routes, manager, routing, time_dimension=None):
+    for vehicle_idx, route_constraint in enumerate(same_routes):
         n2x = manager.NodeToIndex
         cpsolver = routing.solver()
 
-        for stop in route_constraint:
-            vehicle_var = routing.VehicleVar(n2x(stop))
-            values = [-1, vehicle_idx]
-            cpsolver.Add(cpsolver.MemberCt(vehicle_var, values))
+        for stop1, stop2 in zip(route_constraint, route_constraint[1:]):
+            routing.AddPickupAndDelivery(n2x(stop1), n2x(stop2))
+            cpsolver.Add(routing.VehicleVar(n2x(stop1)) == routing.VehicleVar(n2x(stop2)))
+            if time_dimension:
+                cpsolver.Add(
+                    time_dimension.CumulVar(n2x(stop1)) <=
+                    time_dimension.CumulVar(n2x(stop2)))
 
 
 def add_different_route_constraints(data, manager, routing):
@@ -156,16 +160,13 @@ def add_different_route_constraints(data, manager, routing):
         vehicle_var_1 = routing.VehicleVar(n2x(node1))
         vehicle_var_2 = routing.VehicleVar(n2x(node2))
         cpsolver.Add(cpsolver.AllDifferent([vehicle_var_1, vehicle_var_2]))
-    # cpsolver.Add((vehicle_var_1 != vehicle_var_2) or (vehicle_var_1 == -1 and vehicle_var_2 == -1))
-    # cpsolver.Add(vehicle_var_2 == 2)
-    # cpsolver.Add(vehicle_var_1 == 3)
 
 
 def set_search_parameters(time_out):
     # Setting first solution heuristic.
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     search_parameters.first_solution_strategy = (
-        routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)  # PATH_CHEAPEST_ARC 6990
+        routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
     search_parameters.local_search_metaheuristic = (
         routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
     search_parameters.time_limit.seconds = time_out
