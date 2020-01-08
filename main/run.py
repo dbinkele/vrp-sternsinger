@@ -14,7 +14,6 @@ from main.csv_processing import make_formatted_routes
 from main.template import render
 from main.util import resolve_address_file, print_solution
 
-# 7936/52697
 MAX_TIME_DURATION = 60 * 60 * 360 * 1000
 
 
@@ -46,6 +45,16 @@ def time_matrix(file_name, fixed_arcs):
         return durations
 
 
+def dwell_duration_callback(manager, dwel_duration):
+    def demand_callback_hlp(from_index):
+        """Returns the demand of the node."""
+        # Convert from routing variable Index to demands NodeIndex.
+        from_node = manager.IndexToNode(from_index)
+        return dwel_duration.get(str(from_node), DWEL_DURATION) if from_node != 0 else 0
+
+    return demand_callback_hlp
+
+
 def solve(dist_matrix_file_name, constraints_file):
     """Solve the CVRP problem."""
     # Instantiate the data problem.
@@ -54,7 +63,7 @@ def solve(dist_matrix_file_name, constraints_file):
 
     greatest_dist = max([max(e) for e in data['time_matrix']])
     ub_tour = greatest_dist * no_visits + 1
-    print("ubtour " + str(ub_tour))
+    mult_num_visits, mult_max_tour_len =data['num_visits_to_max_tour_len_ration']
     # Create the routing index manager.
     manager = pywrapcp.RoutingIndexManager(no_visits,
                                            data['num_vehicles'], data['depot'])
@@ -88,10 +97,22 @@ def solve(dist_matrix_file_name, constraints_file):
         not time_windows_exist,  # start cumul to zero
         dimension_name)
     time_dimension = routing.GetDimensionOrDie(dimension_name)
-    time_dimension.SetGlobalSpanCostCoefficient(100)
+    time_dimension.SetGlobalSpanCostCoefficient(100 * mult_max_tour_len)
 
     if time_windows_exist:
         add_time_windows(data, manager, routing, time_dimension)
+
+    ####### Dwell-Duration
+    dimension_num_visits = 'NUM_VISITS'
+    routing.AddDimension(
+        routing.RegisterUnaryTransitCallback(lambda from_node: 1),
+        0,  # null capacity slack
+        (no_visits + 1),  # vehicle maximum capacities
+        True,  # start cumul to zero
+        dimension_num_visits)
+
+    capacity_dimension = routing.GetDimensionOrDie(dimension_num_visits)
+    capacity_dimension.SetGlobalSpanCostCoefficient(100 * mult_num_visits)
 
     # Allow to drop nodes.
     # penalty = ub_tour

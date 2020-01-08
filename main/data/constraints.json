@@ -1,14 +1,15 @@
 {
-  "timeout": 760,
+  "num_visits_to_max_tour_len_ration": [2, 1],
+  "timeout": 60,
   "depot": 0,
   "num_vehicles": 7,
   "fixed_arcs" : [
   ],
   "same_route": [
-     [], [7, 16], [71], [39], [24, 34], []
+     [77, 61], [], [7, 16], [71], [39], [24, 34], []
   ],
   "same_route_ordered": [
-    [77, 61]
+
   ],
   "different_route": [],
   "dwell_duration": {
