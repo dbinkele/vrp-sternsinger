@@ -63,7 +63,7 @@ def solve(dist_matrix_file_name, constraints_file):
 
     greatest_dist = max([max(e) for e in data['time_matrix']])
     ub_tour = greatest_dist * no_visits + 1
-    mult_num_visits, mult_max_tour_len =data['num_visits_to_max_tour_len_ration']
+    mult_num_visits, mult_max_tour_len = data['num_visits_to_max_tour_len_ration']
     # Create the routing index manager.
     manager = pywrapcp.RoutingIndexManager(no_visits,
                                            data['num_vehicles'], data['depot'])
@@ -119,6 +119,7 @@ def solve(dist_matrix_file_name, constraints_file):
     # for node in range(1, len(data['time_matrix'])):
     #   routing.AddDisjunction([manager.NodeToIndex(node)], penalty)
 
+    add_assign_to_route_constraints(data['assign_to_route'], manager, routing)
     add_same_route_constraints(data['same_route'], manager, routing)
     add_same_route_constraints(data['same_route_ordered'], manager, routing, time_dimension)
     add_different_route_constraints(data, manager, routing)
@@ -160,12 +161,23 @@ def add_time_windows(data, manager, routing, time_dimension):
             time_dimension.CumulVar(routing.End(i)))
 
 
+def add_assign_to_route_constraints(route_assignments, manager, routing):
+    n2x = manager.NodeToIndex
+    cpsolver = routing.solver()
+
+    for route_idx, route_assignment in enumerate(route_assignments):
+        for stop in route_assignment:
+            vehicle_var = routing.VehicleVar(n2x(stop))
+            values = [-1, route_idx]
+            cpsolver.Add(cpsolver.MemberCt(vehicle_var, values))
+
+
 def add_same_route_constraints(same_routes, manager, routing, time_dimension=None):
-    for vehicle_idx, route_constraint in enumerate(same_routes):
+    for vehicle_idx, same_route_constraint in enumerate(same_routes):
         n2x = manager.NodeToIndex
         cpsolver = routing.solver()
 
-        for stop1, stop2 in zip(route_constraint, route_constraint[1:]):
+        for stop1, stop2 in zip(same_route_constraint, same_route_constraint[1:]):
             routing.AddPickupAndDelivery(n2x(stop1), n2x(stop2))
             cpsolver.Add(routing.VehicleVar(n2x(stop1)) == routing.VehicleVar(n2x(stop2)))
             if time_dimension:
@@ -219,7 +231,7 @@ def set_search_parameters(time_out):
     # use_relocate_subtrip: BOOL_TRUE
     # use_exchange_subtrip: BOOL_TRUE
     search_parameters.guided_local_search_lambda_coefficient = 0.25
-
+    #search_parameters.lns_time_limit.seconds = 100
     return search_parameters
 
 

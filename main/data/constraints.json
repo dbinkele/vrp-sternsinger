@@ -1,9 +1,12 @@
 {
   "num_visits_to_max_tour_len_ration": [2, 1],
-  "timeout": 60,
+  "timeout": 3360,
   "depot": 0,
   "num_vehicles": 7,
   "fixed_arcs" : [
+  ],
+  "assign_to_route": [
+     [77, 61], [], [7, 16], [71], [39], [24, 34], []
   ],
   "same_route": [
      [77, 61], [], [7, 16], [71], [39], [24, 34], []
