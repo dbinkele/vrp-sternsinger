@@ -9,7 +9,7 @@ from ortools.constraint_solver import pywrapcp
 import json
 import os
 
-from main.constants import DIST_MATRIX_FILE, INITIAL_SOLUTION
+from main.constants import DIST_MATRIX_FILE
 from main.csv_processing import make_formatted_routes
 from main.template import render
 from main.util import resolve_address_file, print_solution
@@ -43,16 +43,6 @@ def time_matrix(file_name, fixed_arcs):
                 durations[fixed_arc[i]] = durations_to_nodes_for_i
 
         return durations
-
-
-def dwell_duration_callback(manager, dwel_duration):
-    def demand_callback_hlp(from_index):
-        """Returns the demand of the node."""
-        # Convert from routing variable Index to demands NodeIndex.
-        from_node = manager.IndexToNode(from_index)
-        return dwel_duration.get(str(from_node), DWEL_DURATION) if from_node != 0 else 0
-
-    return demand_callback_hlp
 
 
 def solve(dist_matrix_file_name, constraints_file):
@@ -92,7 +82,6 @@ def solve(dist_matrix_file_name, constraints_file):
     routing.AddDimension(
         transit_callback_index,
         60 * 60 if time_windows_exist else 0,  # no slack
-        # 1773,  # vehicle maximum travel distance
         100000,  # 1608
         not time_windows_exist,  # start cumul to zero
         dimension_name)
@@ -200,6 +189,8 @@ def set_search_parameters(time_out):
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     search_parameters.first_solution_strategy = (
         routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
+    # PATH_CHEAPEST_ARC 7640 PATH_CHEAPEST_ARC 7533  LOCAL_CHEAPEST_INSERTION 7613
+    # GLOBAL_CHEAPEST_ARC 7591 LOCAL_CHEAPEST_ARC 7587
     search_parameters.local_search_metaheuristic = (
         routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
     search_parameters.time_limit.seconds = time_out
@@ -231,7 +222,7 @@ def set_search_parameters(time_out):
     # use_relocate_subtrip: BOOL_TRUE
     # use_exchange_subtrip: BOOL_TRUE
     search_parameters.guided_local_search_lambda_coefficient = 0.25
-    #search_parameters.lns_time_limit.seconds = 100
+    # search_parameters.lns_time_limit.seconds = 100
     return search_parameters
 
 
@@ -243,7 +234,7 @@ def main(matrix_file, constraints_file, csv=None, ):
         path = './routes'
         os.system('rm -rf %s/*' % path)
         for idx, route_html in enumerate(routes_html):
-            with open('./routes/route_' + str(idx) + '.html', 'w') as file:
+            with open(path + '/route_' + str(idx) + '.html', 'w') as file:
                 file.write(route_html)
 
 

@@ -4,7 +4,7 @@ from functools import reduce
 import requests
 import json
 
-from main.constants import ADDRESS_CSV, DISTANCE_MATRIX_QUERY, COORDINATES_QUERY, DIST_MATRIX_FILE
+from main.constants import DISTANCE_MATRIX_QUERY, COORDINATES_QUERY, DIST_MATRIX_FILE
 from main.util import restrict_to_keys, json_file_name_from_csv, resolve_address_file
 
 
