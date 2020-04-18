@@ -32,11 +32,17 @@ def fetch_coordinates(location):
 
 def to_json_with_coordinates(file_name):
     addresses_dict = csv_dict_list(file_name)
+    coor_out = []
     for address in addresses_dict:
         coordinates = fetch_coordinates(address)
+        coord_str = "[" + coordinates['lon'] + ',' + coordinates['lat'] + "]"
+        coor_out.append(coord_str)
         address.update(coordinates)
+
     with open(json_file_name_from_csv(file_name), 'w') as outfile:
         json.dump(addresses_dict, outfile)
+
+    return addresses_dict
 
 
 def make_distance_matrix(addresses):
@@ -63,15 +69,17 @@ def make_url(addresses):
     return url
 
 
-def make_dist_matrix(file_name):
-    with open(json_file_name_from_csv(file_name), 'rb') as file:
-        make_distance_matrix(json.load(file))
+def make_dist_matrix(adresses_json):
+    url = make_url(adresses_json)
+    response = requests.get(url)
+    if response.status_code == 200:
+        dump_to_dist_matrix_file(response.json())
+    else:
+        print("Bad request " + str(response.status_code))
 
 
-def make_formatted_routes(routes, file_name):
-    with open(json_file_name_from_csv(file_name), 'rb') as file:
-        addresses = json.load(file)
-        return [route_to_adress(route, addresses) for route in routes]
+def make_formatted_routes(routes, addresses):
+    return [route_to_adress(route, addresses) for route in routes]
 
 
 def route_to_adress(route, addresses):
@@ -80,5 +88,6 @@ def route_to_adress(route, addresses):
 
 if __name__ == '__main__':
     address_file = resolve_address_file()
-    to_json_with_coordinates(address_file)
-    make_dist_matrix(address_file)
+    adresses_json = to_json_with_coordinates(address_file)
+
+    make_dist_matrix(adresses_json)

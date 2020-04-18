@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-osrm-routed --algorithm mld map.osrm
+osrm-routed --port 80 --algorithm mld map.osrm

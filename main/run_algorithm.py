@@ -2,53 +2,48 @@
 
 from __future__ import print_function
 
-import sys
-
-from ortools.constraint_solver import routing_enums_pb2
-from ortools.constraint_solver import pywrapcp
 import json
 import os
+import sys
+
+from ortools.constraint_solver import pywrapcp
+from ortools.constraint_solver import routing_enums_pb2
 
 from main.constants import DIST_MATRIX_FILE
 from main.csv_processing import make_formatted_routes
 from main.template import render
-from main.util import resolve_address_file, print_solution
+from main.util import resolve_address_file, print_solution, json_file_name_from_csv
 
 MAX_TIME_DURATION = 60 * 60 * 360 * 1000
 
 
-def create_data_model(file_name, constraints_file):
+def create_data_model(dist_matrix, constraints):
     """Stores the data for the problem."""
 
-    with open(constraints_file) as constraints_file_handle:
-        constraints = json.load(constraints_file_handle)
-
-        result = {'time_matrix': time_matrix(file_name, constraints['fixed_arcs'])
-                  }
-        result.update(constraints)
-        return result
+    result = {'time_matrix': time_matrix(dist_matrix, constraints['fixed_arcs'])
+              }
+    result.update(constraints)
+    return result
 
 
-def time_matrix(file_name, fixed_arcs):
-    with open(file_name) as json_file:
-        data = json.load(json_file)
-        durations = data['durations']
+def time_matrix(dist_matrix, fixed_arcs):
+    durations = dist_matrix['durations']
 
-        for fixed_arc in fixed_arcs:
-            for i in range(0, len(fixed_arc) - 1):
-                durations_to_nodes_for_i = durations[fixed_arc[i]]
-                for to_node_idx in range(0, len(durations_to_nodes_for_i)):
-                    if to_node_idx != fixed_arc[i + 1]:
-                        durations_to_nodes_for_i[to_node_idx] = MAX_TIME_DURATION
-                durations[fixed_arc[i]] = durations_to_nodes_for_i
+    for fixed_arc in fixed_arcs:
+        for i in range(0, len(fixed_arc) - 1):
+            durations_to_nodes_for_i = durations[fixed_arc[i]]
+            for to_node_idx in range(0, len(durations_to_nodes_for_i)):
+                if to_node_idx != fixed_arc[i + 1]:
+                    durations_to_nodes_for_i[to_node_idx] = MAX_TIME_DURATION
+            durations[fixed_arc[i]] = durations_to_nodes_for_i
 
-        return durations
+    return durations
 
 
-def solve(dist_matrix_file_name, constraints_file):
+def solve(dist_matrix, constraints_file):
     """Solve the CVRP problem."""
     # Instantiate the data problem.
-    data = create_data_model(dist_matrix_file_name, constraints_file)
+    data = create_data_model(dist_matrix, constraints_file)
     no_visits = len(data['time_matrix'])
 
     greatest_dist = max([max(e) for e in data['time_matrix']])
@@ -226,18 +221,30 @@ def set_search_parameters(time_out):
     return search_parameters
 
 
-def main(matrix_file, constraints_file, csv=None, ):
+def mainrunner(matrix_file, constraints_file, addresses):
     routes = solve(matrix_file, constraints_file)
-    if csv:
-        json_routes = make_formatted_routes(routes, csv)
-        routes_html = [render(json_route) for json_route in json_routes]
-        path = './routes'
-        os.system('rm -rf %s/*' % path)
-        for idx, route_html in enumerate(routes_html):
-            with open(path + '/route_' + str(idx) + '.html', 'w') as file:
-                file.write(route_html)
+    return make_formatted_routes(routes, addresses)
+
+
+def main():
+    csv = resolve_address_file()
+    constraints_file = str(sys.argv[2])
+    with open(json_file_name_from_csv(csv), 'rb') as file:
+        with open(constraints_file) as constraints_file_handle:
+            with open(DIST_MATRIX_FILE) as json_file:
+                dist_matrix = json.load(json_file)
+
+                json_constraints = json.load(constraints_file_handle)
+                json_addresses = json.load(file)
+                json_routes = mainrunner(dist_matrix, json_constraints, json_addresses)
+                routes_html = [render(json_route) for json_route in json_routes]
+
+                path = './routes'
+                os.system('rm -rf %s/*' % path)
+                for idx, route_html in enumerate(routes_html):
+                    with open(path + '/route_' + str(idx) + '.html', 'w') as file:
+                        file.write(route_html)
 
 
 if __name__ == '__main__':
-    main(DIST_MATRIX_FILE, str(sys.argv[2]), resolve_address_file())
-    # main()
+    main()
