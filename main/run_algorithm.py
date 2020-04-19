@@ -12,7 +12,7 @@ from ortools.constraint_solver import routing_enums_pb2
 from main.constants import DIST_MATRIX_FILE
 from main.csv_processing import make_formatted_routes
 from main.template import render
-from main.util import resolve_address_file, print_solution, json_file_name_from_csv
+from main.util import resolve_address_file, print_solution, json_file_name_from_csv, check
 
 MAX_TIME_DURATION = 60 * 60 * 360 * 1000
 
@@ -223,23 +223,6 @@ def set_search_parameters(time_out):
 def mainrunner(matrix_file, json_constraints, json_addresses):
     routes = solve(matrix_file, json_constraints)
     return make_formatted_routes(routes, json_addresses)
-
-
-def check(json_constraints, json_addresses):
-    no_locations = len(json_addresses)
-    for tag in ['fixed_arcs', 'assign_to_route', 'same_route', 'same_route_ordered', 'different_route']:
-        bad_entries = check_index_between(json_constraints[tag], 0, no_locations)
-        if bad_entries:
-            raise ValueError(
-                'Index not between 0 and ' + str(no_locations) + " for tag " + tag + ", but were " + str(bad_entries))
-
-
-def check_index_between(nested_list, start, end):
-    for inner_list in nested_list:
-        bad_entries = [x for x in inner_list if not (start <= x < end)]
-        if len(bad_entries) > 0:
-            return bad_entries
-    return None
 
 
 def main():

@@ -52,3 +52,26 @@ def print_solution(data, manager, routing, solution, time_dimesnion):
     print('Total distance of routes: {}m'.format(sum_routes_distances))
     print('Number of visits: {}m'.format(total_route_len))
     return routes
+
+
+def check(json_constraints, json_addresses):
+    no_locations = len(json_addresses) - 1
+    for tag in ['fixed_arcs', 'assign_to_route', 'same_route', 'same_route_ordered', 'different_route']:
+        bad_entries = check_index_between(json_constraints[tag], 0, no_locations)
+        if bad_entries:
+            raise ValueError(
+                'Index not between 0 and ' + str(no_locations) + " for tag " + tag + ", but were " + str(bad_entries))
+
+    idxs = [int(idx) for idx in json_constraints['time_windows'].keys()]
+    bad_keys = check_index_between([idxs], 0, no_locations)
+    if bad_keys:
+        raise ValueError(
+            "key-index for time-windows not between 0 and  " + str(no_locations) + ", but were " + str(bad_keys))
+
+
+def check_index_between(nested_list, start, end):
+    for inner_list in nested_list:
+        bad_entries = [x for x in inner_list if not (start <= x <= end)]
+        if len(bad_entries) > 0:
+            return bad_entries
+    return None
