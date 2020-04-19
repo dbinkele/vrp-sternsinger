@@ -157,7 +157,7 @@ def add_assign_to_route_constraints(route_assignments, manager, routing):
 
 
 def add_same_route_constraints(same_routes, manager, routing, time_dimension=None):
-    for vehicle_idx, same_route_constraint in enumerate(same_routes):
+    for same_route_constraint in same_routes:
         n2x = manager.NodeToIndex
         cpsolver = routing.solver()
 
@@ -229,21 +229,21 @@ def mainrunner(matrix_file, constraints_file, addresses):
 def main():
     csv = resolve_address_file()
     constraints_file = str(sys.argv[2])
-    with open(json_file_name_from_csv(csv), 'rb') as file:
-        with open(constraints_file) as constraints_file_handle:
-            with open(DIST_MATRIX_FILE) as json_file:
-                dist_matrix = json.load(json_file)
+    with open(json_file_name_from_csv(csv), 'rb') as adress_file:
+        json_addresses = json.load(adress_file)
+    with open(constraints_file) as constraints_file_handle:
+        json_constraints = json.load(constraints_file_handle)
+    with open(DIST_MATRIX_FILE) as dist_matrix_file:
+        dist_matrix = json.load(dist_matrix_file)
 
-                json_constraints = json.load(constraints_file_handle)
-                json_addresses = json.load(file)
-                json_routes = mainrunner(dist_matrix, json_constraints, json_addresses)
-                routes_html = [render(json_route) for json_route in json_routes]
+    json_routes = mainrunner(dist_matrix, json_constraints, json_addresses)
+    routes_html = [render(json_route) for json_route in json_routes]
 
-                path = './routes'
-                os.system('rm -rf %s/*' % path)
-                for idx, route_html in enumerate(routes_html):
-                    with open(path + '/route_' + str(idx) + '.html', 'w') as file:
-                        file.write(route_html)
+    path = './routes'
+    os.system('rm -rf %s/*' % path)
+    for idx, route_html in enumerate(routes_html):
+        with open(path + '/route_' + str(idx) + '.html', 'w') as outfile:
+            outfile.write(route_html)
 
 
 if __name__ == '__main__':

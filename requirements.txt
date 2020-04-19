@@ -1,24 +1,4 @@
-attrs==19.3.0
-certifi==2019.11.28
-chardet==3.0.4
-Click==7.0
-click-plugins==1.1.1
-cligj==0.5.0
-Fiona==1.8.13
-geopandas==0.6.2
-idna==2.8
 Jinja2==2.10.3
-MarkupSafe==1.1.1
-munch==2.5.0
-numpy==1.17.4
-ortools==7.4.7247
+ortools== 7.5.7466
 pandas==0.25.3
-polyline==1.4.0
-protobuf==3.11.1
-pyproj==2.4.2.post1
-python-dateutil==2.8.1
-pytz==2019.3
 requests==2.22.0
-Shapely==1.6.4.post2
-six==1.13.0
-urllib3==1.25.7
