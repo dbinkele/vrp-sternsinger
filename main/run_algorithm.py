@@ -17,12 +17,11 @@ from main.util import resolve_address_file, print_solution, json_file_name_from_
 MAX_TIME_DURATION = 60 * 60 * 360 * 1000
 
 
-def create_data_model(dist_matrix, constraints):
+def create_data_model(dist_matrix, json_constraints):
     """Stores the data for the problem."""
 
-    result = {'time_matrix': time_matrix(dist_matrix, constraints['fixed_arcs'])
-              }
-    result.update(constraints)
+    result = {'time_matrix': time_matrix(dist_matrix, json_constraints['fixed_arcs'])}
+    result.update(json_constraints)
     return result
 
 
@@ -40,10 +39,10 @@ def time_matrix(dist_matrix, fixed_arcs):
     return durations
 
 
-def solve(dist_matrix, constraints_file):
+def solve(dist_matrix, json_constraints):
     """Solve the CVRP problem."""
     # Instantiate the data problem.
-    data = create_data_model(dist_matrix, constraints_file)
+    data = create_data_model(dist_matrix, json_constraints)
     no_visits = len(data['time_matrix'])
 
     greatest_dist = max([max(e) for e in data['time_matrix']])
@@ -221,9 +220,26 @@ def set_search_parameters(time_out):
     return search_parameters
 
 
-def mainrunner(matrix_file, constraints_file, addresses):
-    routes = solve(matrix_file, constraints_file)
-    return make_formatted_routes(routes, addresses)
+def mainrunner(matrix_file, json_constraints, json_addresses):
+    routes = solve(matrix_file, json_constraints)
+    return make_formatted_routes(routes, json_addresses)
+
+
+def check(json_constraints, json_addresses):
+    no_locations = len(json_addresses)
+    for tag in ['fixed_arcs', 'assign_to_route', 'same_route', 'same_route_ordered', 'different_route']:
+        bad_entries = check_index_between(json_constraints[tag], 0, no_locations)
+        if bad_entries:
+            raise ValueError(
+                'Index not between 0 and ' + str(no_locations) + " for tag " + tag + ", but were " + str(bad_entries))
+
+
+def check_index_between(nested_list, start, end):
+    for inner_list in nested_list:
+        bad_entries = [x for x in inner_list if not (start <= x < end)]
+        if len(bad_entries) > 0:
+            return bad_entries
+    return None
 
 
 def main():
@@ -235,6 +251,8 @@ def main():
         json_constraints = json.load(constraints_file_handle)
     with open(DIST_MATRIX_FILE) as dist_matrix_file:
         dist_matrix = json.load(dist_matrix_file)
+
+    check(json_constraints, json_addresses)
 
     json_routes = mainrunner(dist_matrix, json_constraints, json_addresses)
     routes_html = [render(json_route) for json_route in json_routes]

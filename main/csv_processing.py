@@ -53,8 +53,8 @@ def dump_to_dist_matrix_file(json_dict):
         json.dump(dist_matrix_dict, outfile)
 
 
-def make_formatted_routes(routes, addresses):
-    return [route_to_adress(route, addresses) for route in routes]
+def make_formatted_routes(routes, json_addresses):
+    return [route_to_adress(route, json_addresses) for route in routes]
 
 
 def route_to_adress(route, addresses):
