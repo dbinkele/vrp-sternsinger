@@ -4,7 +4,8 @@ from functools import reduce
 import requests
 import json
 
-from main.constants import DISTANCE_MATRIX_QUERY, COORDINATES_QUERY, DIST_MATRIX_FILE
+from main.constants import COORDINATES_QUERY, DIST_MATRIX_FILE
+from main.requests_util import request_dist_matrix, make_url
 from main.util import restrict_to_keys, json_file_name_from_csv, resolve_address_file
 
 
@@ -45,37 +46,11 @@ def to_json_with_coordinates(file_name):
     return addresses_dict
 
 
-def make_distance_matrix(addresses):
-    url = make_url(addresses)
-    print(url)
-    response = requests.get(url)
-    if response.status_code == 200:
-        dump_to_dist_matrix_file(response.json())
-    else:
-        print("BAd request " + str(response.status_code))
-
-
 def dump_to_dist_matrix_file(json_dict):
-    keys = ['code', 'durations']
+    keys = ['durations']
     dist_matrix_dict = dict(zip(keys, [json_dict[k] for k in keys]))
     with open(json_file_name_from_csv(DIST_MATRIX_FILE), 'w') as outfile:
         json.dump(dist_matrix_dict, outfile)
-
-
-def make_url(addresses):
-    lat_lon_str = [str(item['lon'] + ',' + str(item['lat'])) for item in addresses]
-    lat_lon_query = reduce(lambda x, y: x + ';' + y, lat_lon_str)
-    url = DISTANCE_MATRIX_QUERY.format(lat_lon_query)
-    return url
-
-
-def make_dist_matrix(adresses_json):
-    url = make_url(adresses_json)
-    response = requests.get(url)
-    if response.status_code == 200:
-        dump_to_dist_matrix_file(response.json())
-    else:
-        print("Bad request " + str(response.status_code))
 
 
 def make_formatted_routes(routes, addresses):
@@ -90,4 +65,7 @@ if __name__ == '__main__':
     address_file = resolve_address_file()
     adresses_json = to_json_with_coordinates(address_file)
 
-    make_dist_matrix(adresses_json)
+    response_json = request_dist_matrix(adresses_json)
+    print("-------> " + str(response_json))
+    if response_json:
+        dump_to_dist_matrix_file(response_json)
