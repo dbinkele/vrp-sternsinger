@@ -2,3 +2,6 @@ Jinja2==2.11.2
 ortools== 7.6.7691
 pandas==1.0.3
 requests==2.23.0
+Flask==1.1.2
+gunicorn==20.0.4
+
