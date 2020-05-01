@@ -17,13 +17,12 @@ HEADER = {"Authorization": "Bearer {}", 'Accept-Encoding': 'UTF-8', 'Content-Typ
           'Accept': '*/*'}
 
 
-def request_dist_matrix(adresses_json):
+def request_dist_matrix(adresses_json, api_key):
     # return request_local(adresses_json)
-    return request_remote(adresses_json)
+    return request_remote(adresses_json, api_key)
 
 
-def request_remote(adresses_json):
-    api_key = os.getenv("MAP_API_KEY")
+def request_remote(adresses_json, api_key):
     data = json.dumps(
         {"locations": [[item['lon'], item['lat']] for item in adresses_json]})
 

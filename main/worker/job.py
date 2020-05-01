@@ -1,3 +1,4 @@
+import datetime
 import smtplib
 from email.message import EmailMessage
 
@@ -6,26 +7,24 @@ from main.run_algorithm import mainrunner
 from main.template import render
 
 
-def run_job(address_json, constrains_json, config, mail_to):
-    dist_matrix_json = request_dist_matrix(address_json)
+def run_job(address_json, constrains_json, config, mail_to, api_key, template_html):
+    dist_matrix_json = request_dist_matrix(address_json, api_key)
     json_routes = mainrunner(dist_matrix_json, constrains_json, address_json)
-    routes_html = [render(json_route) for json_route in json_routes]
-    print(routes_html)
+    routes_html = [render(json_route, template_html) for json_route in json_routes]
 
     msg = EmailMessage()
     msg['From'] = config['MAIL_USERNAME']
     msg['To'] = mail_to
     msg['Subject'] = 'Just Testing..'
-    message = """{}""".format(routes_html)
+    message = """Send at {} \n content {}""".format(datetime.datetime.now(), routes_html)
     msg.set_content(message)
 
     with make_server(config) as server:
         if config.get('MAIL_PASSWORD'):
             server.login(config['MAIL_USERNAME'], config.get('MAIL_PASSWORD'))
-        server.send_message(msg)
+        send_message = server.send_message(msg)
         server.quit()
-
-    return {'message': message}
+        return {'routes': json_routes, 'mail_status': send_message}
 
 
 def make_server(config):

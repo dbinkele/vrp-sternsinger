@@ -29,11 +29,11 @@ def average_of_key(key, json_addresses, no_entries):
     return avg_lat
 
 
-def render(json_addresses):
+def render(json_addresses, template_html):
     map_link = make_map_link(json_addresses)
     addresses = [to_address_line(json_address) for json_address in json_addresses]
 
-    with open('templates/template.html') as file_:
+    with open(template_html) as file_:
         template = Template(file_.read())
     return template.render(addresses=addresses, map_link=map_link)
 
