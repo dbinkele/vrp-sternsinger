@@ -1,0 +1,4 @@
+export CONFIG_FILE=prod.cfg
+export MAP_API_KEY=5b3ce3597851110001cf62481d2a852601484e2699c4997115a2c95a
+export MAIL_PASSWORD=$1
+heroku local

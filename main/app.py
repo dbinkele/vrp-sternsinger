@@ -33,14 +33,16 @@ def handle_job():
         api_key = os.getenv("MAP_API_KEY")
 
         job = q.enqueue(run_job, data['data'], data['constraints'], mail_config(), data['recipent'], api_key,
-                        '../templates/template.html')
-        # run_job(data['data'], data['constraints'], mail_config(), RECIPENT)
+                        './main/templates/template.html')
+
         status = get_status(job)
         return jsonify(status)
 
 
 def mail_config():
-    return dict((k, app.config[k]) for k in MAIL_KEYS if k in app.config)
+    mail_data = dict((k, app.config[k]) for k in MAIL_KEYS if k in app.config)
+    mail_data['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+    return mail_data
 
 
 def get_status(job):
