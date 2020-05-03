@@ -5,6 +5,9 @@ from email.message import EmailMessage
 from main.requests_util import request_dist_matrix
 from main.run_algorithm import mainrunner
 from main.template import render
+import sendgrid
+import os
+from sendgrid.helpers.mail import *
 
 
 def run_job(address_json, constrains_json, config, mail_to, api_key, template_html):
@@ -12,6 +15,23 @@ def run_job(address_json, constrains_json, config, mail_to, api_key, template_ht
     json_routes = mainrunner(dist_matrix_json, constrains_json, address_json)
     routes_html = [render(json_route, template_html) for json_route in json_routes]
 
+    apikey = os.environ.get('SENDGRID_API_KEY')
+    sg = sendgrid.SendGridAPIClient(apikey=apikey)
+    from_email = Email(config['MAIL_USERNAME'])
+    subject = "Sternsinger-Route"
+    to_email = Email(mail_to)
+    content = Content("text/plain", str(routes_html))
+    mail = Mail(from_email, subject, to_email, content)
+    try:
+        response = sg.client.mail.send.post(request_body=mail.get())
+    except Exception as e:
+        return {'exception': repr(e)}
+
+    return {'routes': json_routes, 'mail_status': response.status_code}
+    # return send_gmail_email(config, json_routes, mail_to, routes_html)
+
+
+def send_gmail_email(config, json_routes, mail_to, routes_html):
     msg = EmailMessage()
     msg['From'] = config['MAIL_USERNAME']
     msg['To'] = mail_to

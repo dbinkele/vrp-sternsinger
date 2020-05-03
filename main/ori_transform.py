@@ -10,7 +10,6 @@ def read_excel(file_name, sheet_name):
     df['city'] = 'Oberriexingen'
     df = df[['code','city','street','number','name']]
     df.to_csv(file_name.replace('xlsx', 'csv'), index=False)
-    print(df.head())
 
 
 if __name__ == '__main__':

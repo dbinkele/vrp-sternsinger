@@ -23,7 +23,6 @@ def csv_dict_list(csv_file):
 def fetch_coordinates(location):
     url = COORDINATES_QUERY.format(
         'de', location['code'], location['number'], location['street'])
-    print("Url " + url)
     response = requests.get(url)
     keys = ['lat', 'lon']
     if response.status_code == 200:
@@ -66,6 +65,5 @@ if __name__ == '__main__':
     adresses_json = to_json_with_coordinates(address_file)
 
     response_json = request_dist_matrix(adresses_json)
-    print("-------> " + str(response_json))
     if response_json:
         dump_to_dist_matrix_file(response_json)
