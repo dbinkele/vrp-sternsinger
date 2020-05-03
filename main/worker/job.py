@@ -18,13 +18,15 @@ def run_job(address_json, constrains_json, config, mail_to, api_key, template_ht
     msg['Subject'] = 'Just Testing..'
     message = """Send at {} \n content {}""".format(datetime.datetime.now(), routes_html)
     msg.set_content(message)
-
-    with make_server(config) as server:
-        if config.get('MAIL_PASSWORD'):
-            server.login(config['MAIL_USERNAME'], config.get('MAIL_PASSWORD'))
-        send_message = server.send_message(msg)
-        server.quit()
-        return {'routes': json_routes, 'mail_status': send_message}
+    try:
+        with make_server(config) as server:
+            if config.get('MAIL_PASSWORD'):
+                server.login(config['MAIL_USERNAME'], config.get('MAIL_PASSWORD'))
+            send_message = server.send_message(msg)
+            server.quit()
+            return {'routes': json_routes, 'mail_status': send_message}
+    except Exception as e:
+        return {'exception': repr(e)}
 
 
 def make_server(config):

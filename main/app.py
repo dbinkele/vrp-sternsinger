@@ -18,8 +18,8 @@ MAIL_KEYS = ['MAIL_SERVER', 'MAIL_PORT', 'MAIL_USERNAME', 'MAIL_PASSWORD', 'MAIL
              'MAIL_USE_TLS']
 
 
-@app.route("/", methods=["POST"])
-def handle_job():
+@app.route("/", methods=["GET"])
+def check_job():
     query_id = request.args.get('job')
     if query_id:
         found_job = q.fetch_job(query_id)
@@ -29,14 +29,18 @@ def handle_job():
             output = {'id': None, 'error_message': 'No job exists with the id number ' + query_id}
         return output
     else:
-        data = request.get_json()
-        api_key = os.getenv("MAP_API_KEY")
+        return {'id': None, 'error_message': 'No job id given'}
 
-        job = q.enqueue(run_job, data['data'], data['constraints'], mail_config(), data['recipent'], api_key,
-                        './main/templates/template.html')
 
-        status = get_status(job)
-        return jsonify(status)
+@app.route("/", methods=["POST"])
+def create_job():
+    data = request.get_json()
+    api_key = os.getenv("MAP_API_KEY")
+
+    job = q.enqueue(run_job, data['data'], data['constraints'], mail_config(), data['recipent'], api_key,
+                    './main/templates/template.html')
+
+    return jsonify(get_status(job))
 
 
 def mail_config():
