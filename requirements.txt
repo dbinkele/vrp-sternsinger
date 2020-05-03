@@ -5,5 +5,5 @@ requests==2.23.0
 Flask==1.1.2
 gunicorn==20.0.4
 rq==1.3.0
-sengrid==6.0.5
+sengrid
 
