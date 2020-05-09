@@ -1,6 +1,6 @@
 import os
 
-from flask import request, Flask, jsonify
+from flask import request, Flask, jsonify, render_template
 from rq import Queue
 
 from main.worker.job import run_job
@@ -42,6 +42,12 @@ def create_job():
 
     return jsonify(get_status(job))
 
+
+# a route where we will display a welcome message via an HTML template
+@app.route("/index")
+def hello():
+    message = "Hello, World"
+    return render_template('index.html', message=message)
 
 def mail_config():
     mail_data = dict((k, app.config[k]) for k in MAIL_KEYS if k in app.config)
