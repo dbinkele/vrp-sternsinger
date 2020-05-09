@@ -1,2 +1,7 @@
 /env
-/osrm_walkingxs
+/osrm_walkings
+/main/data
+/main/routes
+map*
+.idea
+*__pycache__*
