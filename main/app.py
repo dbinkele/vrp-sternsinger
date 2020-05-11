@@ -1,6 +1,8 @@
 import os
+import uuid
 
 from flask import request, Flask, jsonify, render_template
+from flask_cors import cross_origin
 from rq import Queue
 
 from main.worker.job import run_job
@@ -20,9 +22,11 @@ MAIL_KEYS = ['MAIL_SERVER', 'MAIL_PORT', 'MAIL_USERNAME', 'MAIL_PASSWORD', 'MAIL
 
 
 @app.route("/time", methods=["GET"])
+@cross_origin()
 def time():
     now = datetime.now()  # current date and time
-    return {'time': now.strftime("%m/%d/%Y, %H:%M:%S")}
+    time = {'price': now.strftime("%m/%d/%Y, %H:%M:%S"), 'name': uuid.uuid4()}
+    return jsonify({'items': [time]})
 
 
 @app.route("/vrp", methods=["GET"])
