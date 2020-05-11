@@ -5,20 +5,27 @@ from rq import Queue
 
 from main.worker.job import run_job
 from main.worker.worker import conn
+from datetime import datetime
 
-app = Flask(__name__, instance_relative_config=True)
+app = Flask(__name__, instance_relative_config=True, static_url_path='',
+            static_folder='static',
+            template_folder='templates')
+
 config_file = os.environ.get('CONFIG_FILE')
 app.config.from_pyfile(config_file)
 q = Queue(connection=conn)
-
-# RECIPENT = 'dbinkeleraible@googlemail.com'
-RECIPENT = 'dbinkele@itemis.com'
 
 MAIL_KEYS = ['MAIL_SERVER', 'MAIL_PORT', 'MAIL_USERNAME', 'MAIL_PASSWORD', 'MAIL_USE_SSL',
              'MAIL_USE_TLS']
 
 
-@app.route("/", methods=["GET"])
+@app.route("/time", methods=["GET"])
+def time():
+    now = datetime.now()  # current date and time
+    return {'time': now.strftime("%m/%d/%Y, %H:%M:%S")}
+
+
+@app.route("/vrp", methods=["GET"])
 def check_job():
     query_id = request.args.get('job')
     if query_id:
@@ -32,7 +39,7 @@ def check_job():
         return {'id': None, 'error_message': 'No job id given'}
 
 
-@app.route("/", methods=["POST"])
+@app.route("/vrp", methods=["POST"])
 def create_job():
     data = request.get_json()
     api_key = os.getenv("MAP_API_KEY")
@@ -44,10 +51,11 @@ def create_job():
 
 
 # a route where we will display a welcome message via an HTML template
-@app.route("/index")
+@app.route("/")
 def hello():
     message = "Hello, World"
     return render_template('index.html', message=message)
+
 
 def mail_config():
     mail_data = dict((k, app.config[k]) for k in MAIL_KEYS if k in app.config)
