@@ -5,6 +5,7 @@ from flask import request, Flask, jsonify, render_template
 from flask_cors import cross_origin
 from rq import Queue
 
+from main.dummy_data import make_dummy_result_data
 from main.worker.job import run_job
 from main.worker.worker import conn
 from datetime import datetime
@@ -25,8 +26,21 @@ MAIL_KEYS = ['MAIL_SERVER', 'MAIL_PORT', 'MAIL_USERNAME', 'MAIL_PASSWORD', 'MAIL
 @cross_origin()
 def time():
     now = datetime.now()  # current date and time
-    time = {'price': now.strftime("%m/%d/%Y, %H:%M:%S"), 'name': uuid.uuid4()}
-    return jsonify({'items': [time]})
+    return jsonify({'items': [{'price': now.strftime("%m/%d/%Y, %H:%M:%S"), 'name': uuid.uuid4()}]})
+
+
+@app.route("/data", methods=["GET"])
+@cross_origin()
+def data():
+    result_data = make_dummy_result_data()
+    new_routes = [with_id(idx, route) for idx, route in enumerate(result_data['result']['routes'])]
+    result_data['result']['routes'] = new_routes
+    return result_data
+
+
+def with_id(idx, route):
+    idx_dict = {'id ': idx}
+    return [dict(route_member.items() | idx_dict.items()) for route_member in route]
 
 
 @app.route("/vrp", methods=["GET"])

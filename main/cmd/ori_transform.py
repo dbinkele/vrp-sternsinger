@@ -13,5 +13,5 @@ def read_excel(file_name, sheet_name):
 
 
 if __name__ == '__main__':
-    read_excel('./data/Adressenliste.xlsx', 'Übersicht')
+    read_excel('../data/Adressenliste.xlsx', 'Übersicht')
     # main()

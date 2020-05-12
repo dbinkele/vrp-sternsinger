@@ -10,7 +10,7 @@ from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 
 from main.constants import DIST_MATRIX_FILE
-from main.csv_processing import make_formatted_routes
+from main.cmd.csv_processing import make_formatted_routes
 from main.template import render
 from main.util import resolve_address_file, print_solution, json_file_name_from_csv, check
 
