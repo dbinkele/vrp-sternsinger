@@ -34,12 +34,13 @@ def time():
 def data():
     result_data = make_dummy_result_data()
     new_routes = [with_id(idx, route) for idx, route in enumerate(result_data['result']['routes'])]
-    result_data['result']['routes'] = new_routes
+    flattened = [val for sublist in new_routes for val in sublist]
+    result_data['result']['routes'] = flattened
     return result_data
 
 
 def with_id(idx, route):
-    idx_dict = {'id ': idx}
+    idx_dict = {'id': idx}
     return [dict(route_member.items() | idx_dict.items()) for route_member in route]
 
 
