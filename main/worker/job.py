@@ -15,20 +15,23 @@ def run_job(address_json, constrains_json, config, mail_to, api_key, template_ht
     json_routes = mainrunner(dist_matrix_json, constrains_json, address_json)
     routes_html = [render(json_route, template_html) for json_route in json_routes]
 
+    # send_sendgrid(config, mail_to, routes_html)
+    return send_gmail_email(config, json_routes, mail_to, routes_html)
+
+
+def send_sendgrid(config, mail_to, json_routes):
     apikey = os.environ.get('SENDGRID_API_KEY')
     sg = sendgrid.SendGridAPIClient(apikey=apikey)
     from_email = Email(config['MAIL_USERNAME'])
     subject = "Sternsinger-Route"
     to_email = Email(mail_to)
-    content = Content("text/plain", str(routes_html))
+    content = Content("text/plain", str(json_routes))
     mail = Mail(from_email, subject, to_email, content)
     try:
         response = sg.client.mail.send.post(request_body=mail.get())
+        return {'routes': json_routes, 'mail_status': response.status_code}
     except Exception as e:
-        return {'exception': repr(e)}
-
-    return {'routes': json_routes, 'mail_status': response.status_code}
-    # return send_gmail_email(config, json_routes, mail_to, routes_html)
+        return {'routes': json_routes, 'mail_status': repr(e)}
 
 
 def send_gmail_email(config, json_routes, mail_to, routes_html):
@@ -46,7 +49,7 @@ def send_gmail_email(config, json_routes, mail_to, routes_html):
             server.quit()
             return {'routes': json_routes, 'mail_status': send_message}
     except Exception as e:
-        return {'exception': repr(e)}
+        return {'routes': json_routes, 'mail_status': repr(e)}
 
 
 def make_server(config):
