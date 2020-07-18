@@ -33,10 +33,13 @@ def time():
 @cross_origin()
 def data():
     result_data = make_dummy_result_data()
-    new_routes = [with_id(idx, route) for idx, route in enumerate(result_data['result']['routes'])]
-    flattened = [val for sublist in new_routes for val in sublist]
-    result_data['result']['routes'] = flattened
+    result_data['result']['routes'] = flatten_route_lists(result_data['result']['routes'])
     return result_data
+
+
+def flatten_route_lists(result_data):
+    new_routes = [with_id(idx, route) for idx, route in enumerate(result_data)]
+    return [val for sublist in new_routes for val in sublist]
 
 
 def with_id(idx, route):
@@ -45,12 +48,14 @@ def with_id(idx, route):
 
 
 @app.route("/vrp", methods=["GET"])
+@cross_origin()
 def check_job():
     query_id = request.args.get('job')
     if query_id:
         found_job = q.fetch_job(query_id)
         if found_job:
             output = get_status(found_job)
+            output['result']['routes'] = flatten_route_lists(output['result']['routes'])
         else:
             output = {'id': None, 'error_message': 'No job exists with the id number ' + query_id}
         return output
