@@ -11,8 +11,7 @@ def json_file_name_from_csv(file_name):
     return file_name.replace('csv', 'json')
 
 
-def resolve_address_file():
-    address_file = ADDRESS_CSV
+def resolve_address_file(address_file):
     if len(sys.argv) > 1:
         address_file = str(sys.argv[1])
     return address_file

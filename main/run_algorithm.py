@@ -9,7 +9,7 @@ import sys
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 
-from main.constants import DIST_MATRIX_FILE
+from main.constants import DIST_MATRIX_FILE, ADDRESS_CSV
 from main.cmd.csv_processing import make_formatted_routes
 from main.template import render
 from main.util import resolve_address_file, print_solution, json_file_name_from_csv, check
@@ -226,19 +226,20 @@ def mainrunner(matrix_file, json_constraints, json_addresses):
 
 
 def main():
-    csv = resolve_address_file()
+    csv = resolve_address_file(ADDRESS_CSV)
     constraints_file = str(sys.argv[2])
     with open(json_file_name_from_csv(csv), 'rb') as adress_file:
         json_addresses = json.load(adress_file)
     with open(constraints_file) as constraints_file_handle:
         json_constraints = json.load(constraints_file_handle)
-    with open(DIST_MATRIX_FILE) as dist_matrix_file:
+    dist_matrix_file = str(sys.argv[3])
+    with open(dist_matrix_file) as dist_matrix_file:
         dist_matrix = json.load(dist_matrix_file)
 
     check(json_constraints, json_addresses)
 
     json_routes = mainrunner(dist_matrix, json_constraints, json_addresses)
-    routes_html = [render(json_route) for json_route in json_routes]
+    routes_html = [render(json_route, 'templates/template.html') for json_route in json_routes]
 
     path = './routes'
     os.system('rm -rf %s/*' % path)

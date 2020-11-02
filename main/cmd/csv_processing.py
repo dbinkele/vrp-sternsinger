@@ -1,10 +1,11 @@
 # Function to convert a csv file to a list of dictionaries.  Takes in one variable called &quot;variables_file&quot;
+import sys
 from functools import reduce
 
 import requests
 import json
 
-from main.constants import COORDINATES_QUERY, DIST_MATRIX_FILE
+from main.constants import COORDINATES_QUERY, DIST_MATRIX_FILE, ADDRESS_CSV
 from main.requests_util import request_dist_matrix, make_url
 from main.util import restrict_to_keys, json_file_name_from_csv, resolve_address_file
 
@@ -45,10 +46,10 @@ def to_json_with_coordinates(file_name):
     return addresses_dict
 
 
-def dump_to_dist_matrix_file(json_dict):
+def dump_to_dist_matrix_file(json_dict, dist_matrix_file):
     keys = ['durations']
     dist_matrix_dict = dict(zip(keys, [json_dict[k] for k in keys]))
-    with open(json_file_name_from_csv(DIST_MATRIX_FILE), 'w') as outfile:
+    with open(json_file_name_from_csv(dist_matrix_file), 'w') as outfile:
         json.dump(dist_matrix_dict, outfile)
 
 
@@ -60,10 +61,18 @@ def route_to_adress(route, addresses):
     return [addresses[elem] for elem in route]
 
 
+def dist_matrix_file():
+    dist_matrix_file_res = DIST_MATRIX_FILE
+    if len(sys.argv) > 2:
+        dist_matrix_file_res = str(sys.argv[2])
+    return dist_matrix_file_res
+
+
 if __name__ == '__main__':
-    address_file = resolve_address_file()
+    address_file = resolve_address_file(ADDRESS_CSV)
     adresses_json = to_json_with_coordinates(address_file)
 
-    response_json = request_dist_matrix(adresses_json)
+    response_json = request_dist_matrix(adresses_json,'5b3ce3597851110001cf624854f2480e0f4a47ec9cf4c2d6ac7126f0cd ')
+
     if response_json:
-        dump_to_dist_matrix_file(response_json)
+        dump_to_dist_matrix_file(response_json, dist_matrix_file())

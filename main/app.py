@@ -10,9 +10,7 @@ from main.worker.job import run_job
 from main.worker.worker import conn
 from datetime import datetime
 
-app = Flask(__name__, instance_relative_config=True, static_url_path='',
-            static_folder='static',
-            template_folder='templates')
+app = Flask(__name__, instance_relative_config=True, static_folder='../build', static_url_path='')
 
 config_file = os.environ.get('CONFIG_FILE')
 app.config.from_pyfile(config_file)
@@ -74,11 +72,14 @@ def create_job():
     return jsonify(get_status(job))
 
 
-# a route where we will display a welcome message via an HTML template
-@app.route("/")
-def hello():
-    message = "Hello, World"
-    return render_template('index.html', message=message)
+@app.route('/', methods=["GET"])
+def index():
+    return app.send_static_file('index.html')
+
+
+@app.route('/favicon.ico', methods=["GET"])
+def favicon():
+    return app.send_static_file('favicon.ico')
 
 
 def mail_config():
@@ -98,5 +99,5 @@ def get_status(job):
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    # Only for debugging while developing
+    app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 80))
