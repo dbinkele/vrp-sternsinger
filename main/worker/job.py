@@ -40,7 +40,7 @@ def send_gmail_email(config, json_routes, mail_to, routes_html):
     msg['To'] = mail_to
     msg['Subject'] = 'Just Testing..'
     message = """Send at {} \n content {}""".format(datetime.datetime.now(), routes_html)
-    msg.set_content(message)
+    msg.set_content(message, subtype='html')
     try:
         with make_server(config) as server:
             if config.get('MAIL_PASSWORD'):

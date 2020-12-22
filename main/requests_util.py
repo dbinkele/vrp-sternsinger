@@ -24,8 +24,10 @@ def request_dist_matrix(adresses_json, api_key):
 def request_remote(adresses_json, api_key):
     data = json.dumps(
         {"locations": [[item['lon'], item['lat']] for item in adresses_json]})
-
-    return requests.post(OPEN_ROUTES_URL, data=data, headers=(header(api_key))).json()
+    print("POST DIST_MATRIX " + api_key)
+    post = requests.post(OPEN_ROUTES_URL, data=data, headers=(header(api_key)), timeout=10)
+    print(post)
+    return post.json()
 
 
 def header(api_key):

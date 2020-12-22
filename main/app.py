@@ -67,7 +67,7 @@ def create_job():
     api_key = os.getenv("MAP_API_KEY")
 
     job = q.enqueue(run_job, data['data'], data['constraints'], mail_config(), data['recipent'], api_key,
-                    './main/templates/template.html')
+                    './templates/template.html')
 
     return jsonify(get_status(job))
 
