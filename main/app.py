@@ -67,7 +67,7 @@ def create_job():
     print("-----> Create Job")
     constraints_json = data['constraints']
     transform_to_index_value_format(constraints_json, 'dwell_duration')
-    transform_to_index_value_format(constraints_json, 'time_windows')
+    transform_to_index_value_format(constraints_json, 'time_windows') #ToDo first use global start time to calc time offset
     job = q.enqueue_call(func=run_job,
                          args=(data['data'], constraints_json, mail_config(), data['recipent'], api_key,
                                './main/templates/template.html'), result_ttl=5000, ttl=120)

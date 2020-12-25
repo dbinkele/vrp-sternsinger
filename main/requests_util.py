@@ -3,7 +3,7 @@ from functools import reduce
 
 import requests
 
-OPEN_ROUTES_URL = "https://api.openrouteservice.org/v2/matrix/foot-walking"
+OPEN_ROUTES_URL = "https://api.openrouteservice.org/v2/matrix/driving-car" #foot-walking
 
 OSRM_QUERY = 'http://127.0.0.1:5000/table/v1/walking/{}'
 DISTANCE_MATRIX_QUERY = OSRM_QUERY  # MAPBOX_QUERY
