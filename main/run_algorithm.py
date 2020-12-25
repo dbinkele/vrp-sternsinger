@@ -54,7 +54,7 @@ def solve(dist_matrix, json_constraints):
 
     # Create Routing Model.
     routing = pywrapcp.RoutingModel(manager)
-    default_dwell_duration = data['dwell_duration']['-1']
+    default_dwell_duration = data['dwell_duration'][-1]
 
     # Create and register a transit callback.
     def time_callback(from_index, to_index):

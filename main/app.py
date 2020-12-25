@@ -36,13 +36,10 @@ def data():
 
 
 def flatten_route_lists(result_data):
-    new_routes = [with_id(idx, route) for idx, route in enumerate(result_data)]
-    return [val for sublist in new_routes for val in sublist]
-
-
-def with_id(idx, route):
-    idx_dict = {'id': idx}
-    return [dict(route_member.items() | idx_dict.items()) for route_member in route]
+    for idx, route in enumerate(result_data):
+        for route_item in route:
+            route_item['idx'] = idx;
+    return [val for sublist in result_data for val in sublist]
 
 
 @app.route("/vrp", methods=["GET"])
@@ -53,7 +50,8 @@ def check_job():
         found_job = q.fetch_job(query_id)
         if found_job:
             output = get_status(found_job)
-            output['result']['routes'] = flatten_route_lists(output['result']['routes'])
+            if 'result' in output:
+                output['result']['routes'] = flatten_route_lists(output['result']['routes'])
         else:
             output = {'id': None, 'error_message': 'No job exists with the id number ' + query_id}
         return output
@@ -62,22 +60,31 @@ def check_job():
 
 
 @app.route("/vrp", methods=["POST"])
+@cross_origin()
 def create_job():
     data = request.get_json()
     api_key = os.getenv("MAP_API_KEY")
-
-    job = q.enqueue(run_job, data['data'], data['constraints'], mail_config(), data['recipent'], api_key,
-                    './templates/template.html')
+    print("-----> Create Job")
+    constraints_json = data['constraints']
+    transform_to_index_value_format(constraints_json, 'dwell_duration')
+    transform_to_index_value_format(constraints_json, 'time_windows')
+    job = q.enqueue_call(func=run_job,
+                         args=(data['data'], constraints_json, mail_config(), data['recipent'], api_key,
+                               './main/templates/template.html'), result_ttl=5000, ttl=120)
+    # q.enqueue(run_job, data['data'], data['constraints'], mail_config(), data['recipent'], api_key,
+    #             './templates/template.html')
 
     return jsonify(get_status(job))
 
 
 @app.route('/', methods=["GET"])
+@cross_origin()
 def index():
     return app.send_static_file('index.html')
 
 
 @app.route('/favicon.ico', methods=["GET"])
+@cross_origin()
 def favicon():
     return app.send_static_file('favicon.ico')
 
@@ -98,6 +105,11 @@ def get_status(job):
     return status
 
 
+def transform_to_index_value_format(constrains_json, tag):
+    dwell_duration = constrains_json[tag]
+    constrains_json[tag] = dict([item.values() for item in dwell_duration])
+
+
 if __name__ == "__main__":
     # Only for debugging while developing
-    app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 80))
+    app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 5000))
