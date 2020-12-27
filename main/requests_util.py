@@ -3,7 +3,7 @@ from functools import reduce
 
 import requests
 
-OPEN_ROUTES_URL = "https://api.openrouteservice.org/v2/matrix/driving-car" #foot-walking
+OPEN_ROUTES_URL = "https://api.openrouteservice.org/v2/matrix/foot-walking"  # ToDo  driving-car
 
 OSRM_QUERY = 'http://127.0.0.1:5000/table/v1/walking/{}'
 DISTANCE_MATRIX_QUERY = OSRM_QUERY  # MAPBOX_QUERY
@@ -23,7 +23,7 @@ def request_dist_matrix(adresses_json, api_key):
 
 def request_remote(adresses_json, api_key):
     data = json.dumps(
-        {"locations": [[item['lon'], item['lat']] for item in adresses_json]})
+        {"locations": [[item['lon'], item['lat']] for item in adresses_json], "metrics": ["duration"]})
     print("POST DIST_MATRIX " + api_key)
     post = requests.post(OPEN_ROUTES_URL, data=data, headers=(header(api_key)), timeout=10)
     print(post)

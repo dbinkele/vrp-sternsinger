@@ -19,8 +19,18 @@ MAX_TIME_DURATION = 60 * 60 * 360 * 1000
 
 def create_data_model(dist_matrix, json_constraints):
     """Stores the data for the problem."""
+    time = time_matrix(dist_matrix, json_constraints['fixed_arcs'])
+    depot_idx = json_constraints['depot']
+    default_dwell_duration = json_constraints['dwell_duration'][-1]
+    for i in range(0, len(time)):
+        for j in range(0, len(time[i])):
+            time[i][j] += default_dwell_duration if i != depot_idx and j != depot_idx else 0
 
-    result = {'time_matrix': time_matrix(dist_matrix, json_constraints['fixed_arcs'])}
+    dwell_duration = json_constraints['dwell_duration']
+    for idx, duration in dwell_duration.items():
+        for idx2, item in enumerate(time[idx]):
+            time[idx][idx2] += (duration - default_dwell_duration) if idx != -1 else 0
+    result = {'time_matrix': time}
     result.update(json_constraints)
     return result
 
@@ -40,21 +50,24 @@ def time_matrix(dist_matrix, fixed_arcs):
 
 
 def solve(dist_matrix, json_constraints):
+    print("---->Solve")
+    depot_idx = json_constraints['depot']
+
     """Solve the CVRP problem."""
     # Instantiate the data problem.
     data = create_data_model(dist_matrix, json_constraints)
     no_visits = len(data['time_matrix'])
 
     greatest_dist = max([max(e) for e in data['time_matrix']])
-    ub_tour = greatest_dist * no_visits + 1
+    greatest_dwell_time = max(data['dwell_duration'].values())
+    ub_tour = int((greatest_dist + greatest_dwell_time) * no_visits + 1) + 1
     mult_num_visits, mult_max_tour_len = data['num_visits_to_max_tour_len_ration']
     # Create the routing index manager.
     manager = pywrapcp.RoutingIndexManager(no_visits,
-                                           data['num_vehicles'], data['depot'])
+                                           data['num_vehicles'], depot_idx)
 
     # Create Routing Model.
     routing = pywrapcp.RoutingModel(manager)
-    default_dwell_duration = data['dwell_duration'][-1]
 
     # Create and register a transit callback.
     def time_callback(from_index, to_index):
@@ -62,8 +75,7 @@ def solve(dist_matrix, json_constraints):
         # Convert from routing variable Index to distance matrix NodeIndex.
         from_node = manager.IndexToNode(from_index)
         to_node = manager.IndexToNode(to_index)
-        dwell_duration = data['dwell_duration'].get(str(from_node), default_dwell_duration) if from_node != 0 else 0
-        return data['time_matrix'][from_node][to_node] + dwell_duration
+        return data['time_matrix'][from_node][to_node]
 
     transit_callback_index = routing.RegisterTransitCallback(time_callback)
 
@@ -76,7 +88,7 @@ def solve(dist_matrix, json_constraints):
     routing.AddDimension(
         transit_callback_index,
         60 * 60 if time_windows_exist else 0,  # no slack
-        100000,  # 1608
+        ub_tour,  # 1608
         not time_windows_exist,  # start cumul to zero
         dimension_name)
     time_dimension = routing.GetDimensionOrDie(dimension_name)
@@ -135,8 +147,8 @@ def add_time_windows(data, manager, routing, time_dimension):
     # Add time window constraints for each vehicle start node.
     for vehicle_id in range(data['num_vehicles']):
         index = routing.Start(vehicle_id)
-        time_dimension.CumulVar(index).SetRange(data['time_windows']['0'][0],
-                                                data['time_windows']['0'][1])
+        time_dimension.CumulVar(index).SetRange(data['time_windows'][0][0],
+                                                data['time_windows'][0][1])
     for i in range(data['num_vehicles']):
         routing.AddVariableMinimizedByFinalizer(
             time_dimension.CumulVar(routing.Start(i)))

@@ -66,11 +66,11 @@ def create_job():
     api_key = os.getenv("MAP_API_KEY")
     print("-----> Create Job")
     constraints_json = data['constraints']
-    transform_to_index_value_format(constraints_json, 'dwell_duration')
+    transform_to_index_value_format(constraints_json, 'dwell_duration') #ToDo dwell_duration seems to have no effect.
     transform_to_index_value_format(constraints_json, 'time_windows') #ToDo first use global start time to calc time offset
     job = q.enqueue_call(func=run_job,
                          args=(data['data'], constraints_json, mail_config(), data['recipent'], api_key,
-                               './main/templates/template.html'), result_ttl=5000, ttl=120)
+                               '../templates/template.html'), result_ttl=5000, ttl=120)
     # q.enqueue(run_job, data['data'], data['constraints'], mail_config(), data['recipent'], api_key,
     #             './templates/template.html')
 

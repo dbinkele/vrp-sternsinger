@@ -11,6 +11,7 @@ from sendgrid.helpers.mail import *
 
 
 def run_job(address_json, constrains_json, config, mail_to, api_key, template_html):
+    print("----> Job running")
     dist_matrix_json = request_dist_matrix(address_json, api_key)
     json_routes = mainrunner(dist_matrix_json, constrains_json, address_json)
     routes_html = [render(json_route, template_html) for json_route in json_routes]

@@ -1,7 +1,5 @@
 import sys
 
-from main.constants import ADDRESS_CSV
-
 
 def restrict_to_keys(dicto, keys):
     return dict(zip(keys, [dicto[k] for k in keys]))
