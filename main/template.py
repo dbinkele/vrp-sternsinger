@@ -3,7 +3,7 @@ from functools import reduce
 
 from jinja2 import Template
 
-from main.constants import LINK_URL_TEMPLATE
+from main.constants import LINK_URL_TEMPLATE, openstreetmap_url
 from main.util import restrict_to_keys
 
 
@@ -29,8 +29,8 @@ def average_of_key(key, json_addresses, no_entries):
     return avg_lat
 
 
-def render(json_addresses, template_html):
-    map_link = make_map_link(json_addresses)
+def render(json_addresses, template_html, planning_type):
+    map_link = make_map_link(json_addresses, planning_type)
     addresses = [to_address_line(json_address) for json_address in json_addresses]
 
     with open(template_html) as file_:
@@ -38,8 +38,8 @@ def render(json_addresses, template_html):
     return template.render(addresses=addresses, map_link=map_link)
 
 
-def make_map_link(json_addresses):
+def make_map_link(json_addresses, planning_type):
     loc = '&'.join([make_loc(json_address) for json_address in json_addresses])
     center = make_center(json_addresses)
-    map_link = LINK_URL_TEMPLATE.format(center, loc)
+    map_link = openstreetmap_url(planning_type).format(center, loc)
     return map_link

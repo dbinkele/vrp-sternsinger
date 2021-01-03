@@ -251,7 +251,7 @@ def main():
     check(json_constraints, json_addresses)
 
     json_routes = mainrunner(dist_matrix, json_constraints, json_addresses)
-    routes_html = [render(json_route, 'templates/template.html') for json_route in json_routes]
+    routes_html = [render(json_route, 'templates/template.html', 'foot') for json_route in json_routes]
 
     path = './routes'
     os.system('rm -rf %s/*' % path)

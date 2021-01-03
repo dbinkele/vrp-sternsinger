@@ -11,10 +11,11 @@ from sendgrid.helpers.mail import *
 
 
 def run_job(address_json, constrains_json, config, mail_to, api_key, template_html):
-    print("----> Job running")
-    dist_matrix_json = request_dist_matrix(address_json, api_key)
+    planning_type = constrains_json['planningType']
+    print("----> Job running " + planning_type)
+    dist_matrix_json = request_dist_matrix(address_json, api_key, planning_type)
     json_routes = mainrunner(dist_matrix_json, constrains_json, address_json)
-    routes_html = [render(json_route, template_html) for json_route in json_routes]
+    routes_html = [render(json_route, template_html, planning_type) for json_route in json_routes]
 
     # send_sendgrid(config, mail_to, routes_html)
     return send_gmail_email(config, json_routes, mail_to, routes_html)

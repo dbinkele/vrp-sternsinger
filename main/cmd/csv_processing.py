@@ -72,7 +72,7 @@ if __name__ == '__main__':
     address_file = resolve_address_file(ADDRESS_CSV)
     adresses_json = to_json_with_coordinates(address_file)
 
-    response_json = request_dist_matrix(adresses_json,'5b3ce3597851110001cf624854f2480e0f4a47ec9cf4c2d6ac7126f0cd ')
+    response_json = request_dist_matrix(adresses_json,'5b3ce3597851110001cf624854f2480e0f4a47ec9cf4c2d6ac7126f0cd ', 'foot')
 
     if response_json:
         dump_to_dist_matrix_file(response_json, dist_matrix_file())

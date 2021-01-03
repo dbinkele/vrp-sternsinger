@@ -3,7 +3,7 @@ from functools import reduce
 
 import requests
 
-OPEN_ROUTES_URL = "https://api.openrouteservice.org/v2/matrix/foot-walking"  # ToDo  driving-car
+OPEN_ROUTES_URL = "https://api.openrouteservice.org/v2/matrix/"  # ToDo  driving-car
 
 OSRM_QUERY = 'http://127.0.0.1:5000/table/v1/walking/{}'
 DISTANCE_MATRIX_QUERY = OSRM_QUERY  # MAPBOX_QUERY
@@ -16,17 +16,25 @@ HEADER = {"Authorization": "Bearer {}", 'Accept-Encoding': 'UTF-8', 'Content-Typ
           'Accept': '*/*'}
 
 
-def request_dist_matrix(adresses_json, api_key):
+def open_routes_url(planning_type):
+    if planning_type == 'car':
+        return OPEN_ROUTES_URL + 'driving-car'
+    if planning_type == 'foot':
+        return OPEN_ROUTES_URL + 'foot-walking'
+    raise ValueError("Type not supported " + planning_type)
+
+
+def request_dist_matrix(adresses_json, api_key, planning_type):
     # return request_local(adresses_json)
-    return request_remote(adresses_json, api_key)
+    return request_remote(adresses_json, api_key, planning_type)
 
 
-def request_remote(adresses_json, api_key):
+def request_remote(adresses_json, api_key, planning_type):
     data = json.dumps(
         {"locations": [[item['lon'], item['lat']] for item in adresses_json], "metrics": ["duration"]})
     print("POST DIST_MATRIX " + api_key)
-    post = requests.post(OPEN_ROUTES_URL, data=data, headers=(header(api_key)), timeout=10)
-    print(post)
+    post = requests.post(open_routes_url(planning_type), data=data, headers=(header(api_key)), timeout=10)
+    print(post)  # ToDo check if call successful otherwise generate error message.
     return post.json()
 
 

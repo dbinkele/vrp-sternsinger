@@ -45,9 +45,9 @@ def print_solution(data, manager, routing, solution, time_dimesnion):
         sum_routes_distances += route_distance
         print(plan_output)
         max_route_distance = max(route_distance, max_route_distance)
-    print('Maximum of the route distances: {}m'.format(max_route_distance))
-    print('Total distance of routes: {}m'.format(sum_routes_distances))
-    print('Number of visits: {}m'.format(total_route_len))
+    print('Maximum of the route distances: {}'.format(max_route_distance))
+    print('Total distance of routes: {}'.format(sum_routes_distances))
+    print('Number of visits: {}'.format(total_route_len))
     return routes
 
 
