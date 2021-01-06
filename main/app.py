@@ -17,7 +17,7 @@ app.config.from_pyfile(config_file)
 q = Queue(connection=conn)
 
 MAIL_KEYS = ['MAIL_SERVER', 'MAIL_PORT', 'MAIL_USERNAME', 'MAIL_PASSWORD', 'MAIL_USE_SSL',
-             'MAIL_USE_TLS']
+             'MAIL_USE_TLS', 'MAIL_TYPE', 'MAP_API_KEY']
 
 
 @app.route("/time", methods=["GET"])
@@ -63,13 +63,14 @@ def check_job():
 @cross_origin()
 def create_job():
     data = request.get_json()
-    api_key = os.getenv("MAP_API_KEY")
-    print("-----> Create Job")
+    config = make_config()
+    api_key = config.get("MAP_API_KEY")
+    print("-----> Create Job " + api_key)
     constraints_json = data['constraints']
     transform_to_index_value_format(constraints_json, 'dwell_duration')
     transform_to_index_value_format(constraints_json, 'time_windows')
     job = q.enqueue_call(func=run_job,
-                         args=(data['data'], constraints_json, mail_config(), data['recipent'], api_key,
+                         args=(data['data'], constraints_json, config, data['recipent'], api_key,
                                '../templates/template.html'), result_ttl=5000, ttl=120)
     return jsonify(get_status(job))
 
@@ -86,10 +87,14 @@ def favicon():
     return app.send_static_file('favicon.ico')
 
 
-def mail_config():
-    mail_data = dict((k, app.config[k]) for k in MAIL_KEYS if k in app.config)
-    mail_data['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
-    return mail_data
+def make_config():
+    config = dict((k, app.config[k]) for k in MAIL_KEYS if k in app.config)
+    config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+    for key in MAIL_KEYS:
+        if not config.get(key):
+            config[key] = os.getenv(key)
+
+    return config
 
 
 def get_status(job):

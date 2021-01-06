@@ -34,8 +34,11 @@ def request_remote(adresses_json, api_key, planning_type):
         {"locations": [[item['lon'], item['lat']] for item in adresses_json], "metrics": ["duration"]})
     print("POST DIST_MATRIX " + api_key)
     post = requests.post(open_routes_url(planning_type), data=data, headers=(header(api_key)), timeout=10)
-    print(post)  # ToDo check if call successful otherwise generate error message.
-    return post.json()
+    print(post)
+    if post.status_code == 200:
+        return post.json()
+
+    raise ConnectionError(post.status_code)
 
 
 def header(api_key):

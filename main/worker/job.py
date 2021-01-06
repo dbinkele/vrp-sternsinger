@@ -11,21 +11,32 @@ from sendgrid.helpers.mail import *
 
 
 def run_job(address_json, constrains_json, config, mail_to, api_key, template_html):
+    try:
+        return run(address_json, api_key, config, constrains_json, mail_to, template_html)
+    except Exception as e:
+        send_mail(config, str(e), mail_to, "")
+
+
+def run(address_json, api_key, config, constrains_json, mail_to, template_html):
     planning_type = constrains_json['planningType']
     print("----> Job running " + planning_type)
     dist_matrix_json = request_dist_matrix(address_json, api_key, planning_type)
     json_routes = mainrunner(dist_matrix_json, constrains_json, address_json)
     routes_html = [render(json_route, template_html, planning_type) for json_route in json_routes]
+    return send_mail(config, json_routes, mail_to, routes_html)
 
-    # send_sendgrid(config, mail_to, routes_html)
-    return send_gmail_email(config, json_routes, mail_to, routes_html)
+
+def send_mail(config, json_routes, mail_to, routes_html):
+    if config.get('MAIL_TYPE') == 'gmail':
+        return send_gmail_email(config, json_routes, mail_to, routes_html)
+    return send_sendgrid(config, mail_to, routes_html)
 
 
 def send_sendgrid(config, mail_to, json_routes):
     apikey = os.environ.get('SENDGRID_API_KEY')
     sg = sendgrid.SendGridAPIClient(apikey=apikey)
     from_email = Email(config['MAIL_USERNAME'])
-    subject = "Sternsinger-Route"
+    subject = "Route Planning"
     to_email = Email(mail_to)
     content = Content("text/plain", str(json_routes))
     mail = Mail(from_email, subject, to_email, content)
@@ -40,7 +51,7 @@ def send_gmail_email(config, json_routes, mail_to, routes_html):
     msg = EmailMessage()
     msg['From'] = config['MAIL_USERNAME']
     msg['To'] = mail_to
-    msg['Subject'] = 'Just Testing..'
+    msg['Subject'] = 'Route Planning'
     message = """Send at {} \n content {}""".format(datetime.datetime.now(), routes_html)
     msg.set_content(message)
     try:
