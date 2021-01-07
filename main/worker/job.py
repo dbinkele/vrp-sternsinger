@@ -35,12 +35,13 @@ def send_mail(config, json_routes, mail_to, routes_html):
 def send_sendgrid(config, mail_to, json_routes):
     apikey = os.environ.get('SENDGRID_API_KEY')
     sg = sendgrid.SendGridAPIClient(apikey=apikey)
-    from_email = Email(config['MAIL_USERNAME'])
+    from_email = config['MAIL_USERNAME']
+    email = Email(from_email)
     subject = "Route Planning"
     to_email = Email(mail_to)
     content = Content("text/plain", str(json_routes))
-    mail = Mail(from_email, subject, to_email, content)
-    print("Sendgrid..." + apikey)
+    mail = Mail(email, subject, to_email, content)
+    print("Sendgrid..." + str(apikey) + " " + str(mail_to) + " " + str(from_email))
     try:
         response = sg.client.mail.send.post(request_body=mail.get())
         return {'routes': json_routes, 'mail_status': response.status_code}
