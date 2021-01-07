@@ -90,6 +90,7 @@ def favicon():
 def make_config():
     config = dict((k, app.config[k]) for k in MAIL_KEYS if k in app.config)
     config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+    config['SENDGRID_API_KEY'] = os.environ.get('SENDGRID_API_KEY')
     for key in MAIL_KEYS:
         if not config.get(key):
             config[key] = os.getenv(key)
