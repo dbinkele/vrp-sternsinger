@@ -114,4 +114,4 @@ def transform_to_index_value_format(constrains_json, tag):
 
 if __name__ == "__main__":
     # Only for debugging while developing
-    app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 80))
