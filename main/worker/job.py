@@ -40,11 +40,12 @@ def send_sendgrid(config, mail_to, json_routes):
     to_email = Email(mail_to)
     content = Content("text/plain", str(json_routes))
     mail = Mail(from_email, subject, to_email, content)
+    print("Sendgrid..." + apikey)
     try:
         response = sg.client.mail.send.post(request_body=mail.get())
         return {'routes': json_routes, 'mail_status': response.status_code}
     except Exception as e:
-        return {'routes': json_routes, 'mail_status': repr(e)}
+        raise e
 
 
 def send_gmail_email(config, json_routes, mail_to, routes_html):
@@ -62,7 +63,7 @@ def send_gmail_email(config, json_routes, mail_to, routes_html):
             server.quit()
             return {'routes': json_routes, 'mail_status': send_message}
     except Exception as e:
-        return {'routes': json_routes, 'mail_status': repr(e)}
+        raise e
 
 
 def make_server(config):
