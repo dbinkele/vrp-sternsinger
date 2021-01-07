@@ -33,7 +33,7 @@ def send_mail(config, json_routes, mail_to, routes_html):
 
 
 def send_sendgrid(config, mail_to, json_routes):
-    apikey = config('SENDGRID_API_KEY')
+    apikey = config['SENDGRID_API_KEY']
     sg = sendgrid.SendGridAPIClient(apikey=apikey)
     from_email = config['MAIL_USERNAME']
     email = Email(from_email)
