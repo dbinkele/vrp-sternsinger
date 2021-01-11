@@ -71,7 +71,7 @@ def create_job():
     transform_to_index_value_format(constraints_json, 'time_windows')
     job = q.enqueue_call(func=run_job,
                          args=(data['data'], constraints_json, config, data['recipent'], api_key,
-                               '../templates/template.html'), result_ttl=5000, ttl=120)
+                               './main/templates/template.html'), result_ttl=5000, ttl=120)
     return jsonify(get_status(job))
 
 
