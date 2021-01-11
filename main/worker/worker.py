@@ -1,12 +1,13 @@
 import os
 
 import redis
-from rq import Worker, Queue, Connection
+from rq import Queue, Connection
+
+from main.worker.heroku_rq_worker import Worker
 
 listen = ['high', 'default', 'low']
 
-redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379') #redis://redistogo:550e4d868e23b9423b160021b768deb0@tarpon.redistogo.com:10959/
-
+redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
 
 conn = redis.from_url(redis_url)
 
