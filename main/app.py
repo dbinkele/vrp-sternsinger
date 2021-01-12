@@ -1,14 +1,13 @@
 import os
 import uuid
+from datetime import datetime
 
-from flask import request, Flask, jsonify, render_template
+from flask import request, Flask, jsonify
 from flask_cors import cross_origin
 from rq import Queue
 
-from main.dummy_data import make_dummy_result_data
 from main.worker.job import run_job
 from main.worker.worker import conn
-from datetime import datetime
 
 app = Flask(__name__, instance_relative_config=True, static_folder='../build', static_url_path='')
 
@@ -25,14 +24,6 @@ MAIL_KEYS = ['MAIL_SERVER', 'MAIL_PORT', 'MAIL_USERNAME', 'MAIL_PASSWORD', 'MAIL
 def time():
     now = datetime.now()  # current date and time
     return jsonify({'items': [{'price': now.strftime("%m/%d/%Y, %H:%M:%S"), 'name': uuid.uuid4()}]})
-
-
-@app.route("/data", methods=["GET"])
-@cross_origin()
-def data():
-    result_data = make_dummy_result_data()
-    result_data['result']['routes'] = flatten_route_lists(result_data['result']['routes'])
-    return result_data
 
 
 def flatten_route_lists(result_data):
