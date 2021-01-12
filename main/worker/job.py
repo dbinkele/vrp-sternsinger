@@ -14,7 +14,7 @@ def run_job(address_json, constrains_json, config, mail_to, api_key, template_ht
     try:
         return run(address_json, api_key, config, constrains_json, mail_to, template_html)
     except Exception as e:
-        send_mail(config, str(e), mail_to, "")
+        send_mail(config, "", mail_to, str(e))
 
 
 def run(address_json, api_key, config, constrains_json, mail_to, template_html):
@@ -23,7 +23,8 @@ def run(address_json, api_key, config, constrains_json, mail_to, template_html):
     dist_matrix_json = request_dist_matrix(address_json, api_key, planning_type)
     json_routes = mainrunner(dist_matrix_json, constrains_json, address_json)
     routes_html = [render(json_route, template_html, planning_type) for json_route in json_routes]
-    return send_mail(config, json_routes, mail_to, routes_html)
+    send_mail(config, json_routes, mail_to, routes_html)
+    return json_routes
 
 
 def send_mail(config, json_routes, mail_to, routes_html):

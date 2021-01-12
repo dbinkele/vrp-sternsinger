@@ -1,9 +1,9 @@
 import os
 
 import redis
-from rq import Queue, Connection
+from rq import Worker, Queue, Connection
 
-from main.worker.heroku_rq_worker import Worker
+# from main.worker.heroku_rq_worker import Worker
 
 listen = ['high', 'default', 'low']
 

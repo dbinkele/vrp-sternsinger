@@ -38,7 +38,7 @@ def data():
 def flatten_route_lists(result_data):
     for idx, route in enumerate(result_data):
         for route_item in route:
-            route_item['idx'] = idx;
+            route_item['idx'] = idx
     return [val for sublist in result_data for val in sublist]
 
 
@@ -69,9 +69,11 @@ def create_job():
     constraints_json = data['constraints']
     transform_to_index_value_format(constraints_json, 'dwell_duration')
     transform_to_index_value_format(constraints_json, 'time_windows')
+    alive_time = constraints_json['timeout'] * 2
     job = q.enqueue_call(func=run_job,
                          args=(data['data'], constraints_json, config, data['recipent'], api_key,
-                               './main/templates/template.html'), result_ttl=5000, ttl=120)
+                               './main/templates/template.html'), result_ttl=5000, ttl=None, timeout=alive_time)
+
     return jsonify(get_status(job))
 
 

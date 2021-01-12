@@ -124,6 +124,7 @@ def solve(dist_matrix, json_constraints):
     # Solve the problem.
     # initial_assignment = routing.ReadAssignmentFromRoutes(INITIAL_SOLUTION, True)
     # solution = routing.SolveFromAssignmentWithParameters(initial_assignment, search_parameters)
+    print("Start Solving")
     solution = routing.SolveWithParameters(search_parameters)
 
     print("Solver status: ", routing.status())
@@ -200,7 +201,7 @@ def set_search_parameters(time_out):
     search_parameters.local_search_metaheuristic = (
         routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
     search_parameters.time_limit.seconds = time_out
-    # search_parameters.log_search = True
+    search_parameters.log_search = True
     # search_parameters.use_depth_first_search = True
     search_parameters.use_full_propagation = 3
     # search_parameters.use_cp_sat = 3
