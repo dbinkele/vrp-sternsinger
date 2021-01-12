@@ -42,7 +42,7 @@ class Worker(rq.Worker):
     Note: coverage doesn't work inside the forked thread so code expected to be processed there has pragma: no cover
     """
 
-    def main_work_horse(self, job):  # pragma: no cover
+    def main_work_horse(self, job, queue):  # pragma: no cover
         """
         This is the entry point of the newly spawned work horse.
 
@@ -50,14 +50,14 @@ class Worker(rq.Worker):
         """
         random.seed()
 
-        signal.signal(signal.SIGRTMIN, handle_shutdown_imminent)
+        #signal.signal(signal.SIGRTMIN, handle_shutdown_imminent)
         signal.signal(signal.SIGINT, signal.SIG_IGN)
         signal.signal(signal.SIGTERM, signal.SIG_IGN)
 
         self._is_horse = True
         self.log = rq_logger
 
-        success = self.perform_job(job)
+        success = self.perform_job(job, queue)
         os._exit(int(not success))
 
     def _install_signal_handlers(self):
