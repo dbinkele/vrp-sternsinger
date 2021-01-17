@@ -6,6 +6,7 @@ from flask import request, Flask, jsonify
 from flask_cors import cross_origin
 from rq import Queue
 
+from main.requests_util import request_coordinates_remote
 from main.worker.job import run_job
 from main.worker.worker import conn
 
@@ -19,18 +20,16 @@ MAIL_KEYS = ['MAIL_SERVER', 'MAIL_PORT', 'MAIL_USERNAME', 'MAIL_PASSWORD', 'MAIL
              'MAIL_USE_TLS', 'MAIL_TYPE', 'MAP_API_KEY']
 
 
-@app.route("/time", methods=["GET"])
+@app.route("/coordinates", methods=["POST"])
 @cross_origin()
-def time():
-    now = datetime.now()  # current date and time
-    return jsonify({'items': [{'price': now.strftime("%m/%d/%Y, %H:%M:%S"), 'name': uuid.uuid4()}]})
+def coordinates():
+    data = request.get_json()
+    config = make_config()
+    api_key = config.get("MAP_API_KEY")
 
-
-def flatten_route_lists(result_data):
-    for idx, route in enumerate(result_data):
-        for route_item in route:
-            route_item['idx'] = idx
-    return [val for sublist in result_data for val in sublist]
+    json = request_coordinates_remote(api_key, data['code'], data['address'], data['country'])
+    coords_result = json['features'][0]['geometry']['coordinates']
+    return {'lat': coords_result[1], 'lon': coords_result[0]}
 
 
 @app.route("/vrp", methods=["GET"])
@@ -105,6 +104,13 @@ def get_status(job):
 def transform_to_index_value_format(constrains_json, tag):
     dwell_duration = constrains_json[tag]
     constrains_json[tag] = dict([item.values() for item in dwell_duration])
+
+
+def flatten_route_lists(result_data):
+    for idx, route in enumerate(result_data):
+        for route_item in route:
+            route_item['idx'] = idx
+    return [val for sublist in result_data for val in sublist]
 
 
 if __name__ == "__main__":
