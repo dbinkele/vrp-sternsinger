@@ -20,15 +20,18 @@ MAIL_KEYS = ['MAIL_SERVER', 'MAIL_PORT', 'MAIL_USERNAME', 'MAIL_PASSWORD', 'MAIL
              'MAIL_USE_TLS', 'MAIL_TYPE', 'MAP_API_KEY']
 
 
-@app.route("/coordinates", methods=["POST"])
+@app.route("/coordinates", methods=["GET"])
 @cross_origin()
 def coordinates():
-    data = request.get_json()
+    data = request.args
     config = make_config()
     api_key = config.get("MAP_API_KEY")
 
     json = request_coordinates_remote(api_key, data['code'], data['address'], data['country'])
-    coords_result = json['features'][0]['geometry']['coordinates']
+    features_ = json['features']
+    if len(features_) <= 0:
+        return {}
+    coords_result = features_[0]['geometry']['coordinates']
     return {'lat': coords_result[1], 'lon': coords_result[0]}
 
 
