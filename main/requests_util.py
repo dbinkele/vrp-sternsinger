@@ -5,6 +5,7 @@ import requests
 
 OPEN_ROUTES_URL_MATRIX = "https://api.openrouteservice.org/v2/matrix/"
 OPEN_ROUTES_URL_COORDINATES = "https://api.openrouteservice.org/geocode/search/structured"
+OPEN_ROUTES_URL_COORDINATES2 = "https://api.openrouteservice.org/geocode/search"
 OSRM_QUERY = 'http://127.0.0.1:5000/table/v1/walking/{}'
 
 DISTANCE_MATRIX_QUERY = OSRM_QUERY  # MAPBOX_QUERY
@@ -42,10 +43,10 @@ def request_dist_remote(adresses_json, api_key, planning_type):
     raise ConnectionError(response.status_code)
 
 
-def request_coordinates_remote(api_key, code, address, country):
-    response = requests.get(OPEN_ROUTES_URL_COORDINATES,
-                            params={'api_key': api_key, 'address': address, 'country': country, 'postalcode': code,
-                                    'size': 1})
+def request_coordinates_remote(api_key, code, address, country, locality):
+    response = requests.get(OPEN_ROUTES_URL_COORDINATES2,
+                            params={'api_key': api_key, 'text': code + ' ' + address + ' ' + locality,
+                                    'country': country, 'layers': 'address', 'size': 1})
     if response.status_code == 200:
         return response.json()
 

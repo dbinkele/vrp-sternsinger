@@ -27,7 +27,7 @@ def coordinates():
     config = make_config()
     api_key = config.get("MAP_API_KEY")
 
-    json = request_coordinates_remote(api_key, data['code'], data['address'], data['country'])
+    json = request_coordinates_remote(api_key, data['code'], data['address'], data['country'], data['locality'])
     features_ = json['features']
     if len(features_) <= 0:
         return {}
